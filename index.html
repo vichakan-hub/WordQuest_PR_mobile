@@ -2204,6 +2204,165 @@ button {
     line-height: 1.04;
   }
 }
+/* =========================================================
+   REAL FIX: Level row 2 label clipped by viewport
+   วางท้ายสุดของ style เท่านั้น
+   ========================================================= */
+
+#levelScreen.active .level-screen-inner {
+  position: relative !important;
+  z-index: 1000 !important;
+}
+
+#levelScreen.active .level-panel {
+  position: relative !important;
+  z-index: 1001 !important;
+  overflow: visible !important;
+}
+
+/* กัน copyright ทับหน้าเลือกด่าน */
+body:has(#levelScreen.active) .app-credit,
+.is-level-screen .app-credit {
+  z-index: 10 !important;
+  opacity: .55 !important;
+  bottom: calc(var(--app-safe-bottom) + 2px) !important;
+}
+
+/* จอแนวนอนเตี้ย เช่น iPhone 12 landscape / Chrome responsive 894x464 */
+@media (orientation: landscape) and (max-height: 520px) {
+  #levelScreen.active .level-screen-inner {
+    gap: 3px !important;
+    padding-top: calc(var(--app-safe-top) + 2px) !important;
+    padding-bottom: calc(var(--app-safe-bottom) + 16px) !important;
+  }
+
+  #levelScreen.active .level-logo {
+    width: min(38vw, 160px) !important;
+    max-height: 64px !important;
+  }
+
+  #levelScreen.active .level-panel {
+    width: min(540px, 64vw) !important;
+    padding: 9px 12px 16px !important;
+    border-radius: 22px !important;
+  }
+
+  #levelScreen.active .level-head {
+    margin-bottom: 2px !important;
+  }
+
+  #levelScreen.active .level-title {
+    font-size: 1.32rem !important;
+    line-height: 1 !important;
+    margin-bottom: 2px !important;
+  }
+
+  #levelScreen.active .level-subtitle {
+    font-size: .63rem !important;
+    line-height: 1.12 !important;
+  }
+
+  /* จุดสำคัญ: เพิ่มความสูง parent ที่เคยตัด label แถวล่าง */
+  #levelScreen.active .level-pager,
+  #levelScreen.active .level-map-viewport {
+    height: 190px !important;
+    min-height: 190px !important;
+    max-height: 190px !important;
+    overflow: hidden !important;
+  }
+
+  #levelScreen.active .level-map {
+    width: max-content !important;
+    max-width: 100% !important;
+    margin: 6px auto 0 !important;
+    padding: 0 32px 12px !important;
+    grid-template-columns: repeat(5, 52px) !important;
+    gap: 8px 8px !important;
+    justify-content: center !important;
+    align-content: start !important;
+    overflow: visible !important;
+  }
+
+  #levelScreen.active .level-wrap {
+    width: 52px !important;
+    min-height: 82px !important;
+    gap: 3px !important;
+    overflow: visible !important;
+  }
+
+  #levelScreen.active .level-node {
+    width: 52px !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    border-radius: 12px !important;
+    padding: 4px 3px 3px !important;
+  }
+
+  #levelScreen.active .level-label-main {
+    font-size: .42rem !important;
+  }
+
+  #levelScreen.active .level-number-main {
+    margin-top: 0 !important;
+    font-size: 1.55rem !important;
+    line-height: 1 !important;
+  }
+
+  #levelScreen.active .level-stars {
+    min-height: 13px !important;
+    font-size: 1rem !important;
+  }
+
+  #levelScreen.active .level-lock {
+    font-size: .95rem !important;
+  }
+
+  #levelScreen.active .level-name {
+    width: 76px !important;
+    min-height: 24px !important;
+    height: auto !important;
+    padding-bottom: 0 !important;
+    font-size: .48rem !important;
+    line-height: 1.08 !important;
+    overflow: visible !important;
+    white-space: normal !important;
+    word-break: keep-all !important;
+  }
+
+  #levelScreen.active .level-page-btn {
+    top: 86px !important;
+  }
+}
+
+/* จอเตี้ยมากกว่าเดิม */
+@media (orientation: landscape) and (max-height: 430px) {
+  #levelScreen.active .level-pager,
+  #levelScreen.active .level-map-viewport {
+    height: 184px !important;
+    min-height: 184px !important;
+    max-height: 184px !important;
+  }
+
+  #levelScreen.active .level-panel {
+    padding-bottom: 14px !important;
+  }
+
+  #levelScreen.active .level-map {
+    margin-top: 5px !important;
+    padding-bottom: 10px !important;
+    gap: 7px 8px !important;
+  }
+
+  #levelScreen.active .level-wrap {
+    min-height: 80px !important;
+  }
+
+  #levelScreen.active .level-name {
+    min-height: 23px !important;
+    font-size: .46rem !important;
+    line-height: 1.06 !important;
+  }
+}
   </style>
 </head>
 <body>
