@@ -2206,6 +2206,77 @@ button { font-family: "Sarabun", sans-serif; }
   }
 }
 
+    /* =========================================================
+   PATCH: Mobile Level Grid
+   1) ให้แถว 1 กับแถว 2 เข้าใกล้กัน
+   2) กัน label แถวล่างโดนตัด
+   ========================================================= */
+
+@media (max-width: 900px), (pointer: coarse) {
+  :root {
+    --mobile-level-gap-y: 6px;
+    --mobile-level-pager-height: 184px;
+  }
+
+  .level-pager {
+    height: var(--mobile-level-pager-height) !important;
+    min-height: var(--mobile-level-pager-height) !important;
+    max-height: var(--mobile-level-pager-height) !important;
+  }
+
+  .level-map-viewport {
+    height: var(--mobile-level-pager-height) !important;
+    min-height: var(--mobile-level-pager-height) !important;
+    max-height: var(--mobile-level-pager-height) !important;
+    overflow: hidden !important;
+  }
+
+  .level-map {
+    margin: 6px auto 0 !important;
+    gap: var(--mobile-level-gap-y) var(--mobile-level-gap-x) !important;
+    align-content: start !important;
+  }
+
+  .level-wrap {
+    gap: 4px !important;
+  }
+
+  .level-name {
+    min-height: 26px !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding-bottom: 2px !important;
+    font-size: .52rem !important;
+    line-height: 1.12 !important;
+  }
+
+  .level-page-btn {
+    top: 84px !important;
+  }
+}
+
+/* จอเตี้ยมาก ให้ยังไม่ตัด label */
+@media (max-height: 720px) and (max-width: 900px) {
+  :root {
+    --mobile-level-gap-y: 5px;
+    --mobile-level-pager-height: 178px;
+  }
+
+  .level-map {
+    margin-top: 5px !important;
+  }
+
+  .level-name {
+    min-height: 25px !important;
+    font-size: .5rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .level-page-btn {
+    top: 82px !important;
+  }
+}
+
   </style>
 </head>
 <body>
