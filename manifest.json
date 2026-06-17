@@ -1,0 +1,25 @@
+{
+  "name": "Word Quest - ภารกิจพิชิตคำ",
+  "short_name": "Word Quest",
+  "description": "เกมฝึกฟังและเลือกคำ สำหรับการเรียนรู้ภาษาไทย",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#7dd3fc",
+  "theme_color": "#38bdf8",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

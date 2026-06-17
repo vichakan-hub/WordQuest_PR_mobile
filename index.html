@@ -1,0 +1,3630 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#38bdf8" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Word Quest" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="assets/icon-192.png" />
+  <title>Word Quest - ภารกิจพิชิตคำ</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+:root {
+  --desktop-bg: url('assets/bg-desktop.png');
+  --mobile-bg: url('assets/bg-mobile.png');
+  --logo-shadow: 0 14px 26px rgba(15, 23, 42, .23);
+  --text: #18345f;
+  --muted: #42627d;
+  --blue1: #63c8ff;
+  --blue2: #2395dd;
+  --gray1: #d7d7d7;
+  --gray2: #989898;
+  --yellow: #facc15;
+  --pink1: #ec38d5;
+  --pink2: #9c0099;
+  --card: rgba(238, 251, 255, .72);
+  --card-border: rgba(255,255,255,.78);
+  --shadow: 0 22px 55px rgba(15,23,42,.18);
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Sarabun", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+  color: var(--text);
+  overflow: hidden;
+  background: #7dd3fc;
+}
+
+button { font-family: "Sarabun", sans-serif; }
+
+.app {
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(56,189,248,.35), transparent 30%),
+    radial-gradient(circle at 82% 28%, rgba(250,204,21,.22), transparent 28%),
+    var(--desktop-bg),
+    linear-gradient(135deg, #7dd3fc 0%, #38bdf8 42%, #22c55e 100%);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.screen {
+  display: none;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.screen.active {
+  display: block;
+  animation: screenIn .22s ease both;
+}
+
+@keyframes screenIn {
+  from { opacity: 0; transform: translateY(8px) scale(.992); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-img {
+  display: block;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(var(--logo-shadow));
+  user-select: none;
+  pointer-events: none;
+}
+
+.fallback-logo {
+  display: none;
+  text-align: center;
+  font-weight: 900;
+  line-height: .9;
+  color: #fff;
+  text-shadow: 0 5px 0 rgba(0,0,0,.18), 0 10px 22px rgba(15,23,42,.25);
+}
+
+.logo-missing .logo-img { display: none !important; }
+.logo-missing .fallback-logo { display: block !important; }
+
+.fallback-logo .word { font-size: 5rem; color: #fbbf24; }
+.fallback-logo .quest { font-size: 4.6rem; color: #38bdf8; }
+.fallback-logo .thai {
+  display: inline-flex;
+  margin-top: 8px;
+  padding: 8px 26px;
+  border-radius: 999px;
+  background: #f59e0b;
+  color: #5b2d00;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+.fallback-logo.small .word { font-size: 3rem; }
+.fallback-logo.small .quest { font-size: 2.8rem; }
+.fallback-logo.small .thai { font-size: 1rem; }
+.fallback-logo.mini .word { font-size: 1.8rem; }
+.fallback-logo.mini .quest { font-size: 1.7rem; }
+
+.home-screen-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 0 16px 72px;
+}
+
+.home-logo-wrap { width: 100%; }
+.home-logo { width: clamp(380px, 30vw, 520px); max-height: 300px; }
+
+.play-button {
+  width: 320px;
+  height: 76px;
+  border: 0;
+  border-radius: 28px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  line-height: 1;
+  font-weight: 900;
+  color: #fff;
+  background: linear-gradient(180deg, var(--pink1), #c000b8 54%, var(--pink2));
+  box-shadow: 0 8px 0 #760070, 0 17px 30px rgba(90, 0, 90, .28);
+  transition: transform .14s ease, filter .14s ease, box-shadow .14s ease;
+}
+.play-button:hover { transform: translateY(-2px); filter: brightness(1.04); }
+.play-button:active { transform: translateY(5px); box-shadow: 0 3px 0 #760070, 0 9px 18px rgba(90,0,90,.22); }
+
+.play-button:disabled {
+  cursor: not-allowed;
+  opacity: .72;
+  filter: grayscale(.25);
+  transform: none !important;
+  box-shadow: 0 5px 0 #760070, 0 12px 24px rgba(90, 0, 90, .18);
+}
+.home-load-status {
+  width: 320px;
+  height: 76px;
+  padding: 0 22px;
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(236, 253, 255, .82);
+  border: 1px solid rgba(255,255,255,.72);
+  box-shadow: 0 8px 0 rgba(11, 78, 122, .18), 0 17px 30px rgba(15,23,42,.12);
+}
+.home-load-text {
+  display: none;
+  width: 100%;
+  text-align: center;
+  font-size: .82rem;
+  line-height: 1.2;
+  font-weight: 900;
+  color: #b91c1c;
+  margin-bottom: 7px;
+}
+.home-load-bar {
+  width: 100%;
+  height: 18px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(191, 219, 254, .95);
+  box-shadow: inset 0 1px 3px rgba(15,23,42,.12);
+  overflow: hidden;
+}
+.home-load-bar-fill {
+  position: relative;
+  width: 0%;
+  height: 100%;
+  border-radius: 999px;
+  overflow: hidden;
+  background: linear-gradient(90deg, #22c55e, #38bdf8, #6366f1);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 0 14px rgba(56,189,248,.38);
+  transition: width .25s ease;
+}
+
+.home-load-bar-fill::after,
+.loading-bar-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255,255,255,.42) 0,
+    rgba(255,255,255,.42) 8px,
+    rgba(255,255,255,.10) 8px,
+    rgba(255,255,255,.10) 16px
+  );
+  background-size: 34px 34px;
+  animation: candyStripeMove .55s linear infinite;
+}
+.home-load-bar-fill::before,
+.loading-bar-fill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,0) 55%);
+  z-index: 1;
+  pointer-events: none;
+}
+@keyframes candyStripeMove {
+  from { background-position: 0 0; }
+  to { background-position: 34px 0; }
+}
+.home-load-status.error {
+  height: auto;
+  min-height: 76px;
+  padding: 10px 16px 12px;
+}
+.home-load-status.error .home-load-text { display: block; }
+.home-load-status.error .home-load-bar-fill { background: linear-gradient(90deg, #f97316, #ef4444); }
+.home-hint {
+  min-width: 270px;
+  padding: 8px 18px;
+  text-align: center;
+  border-radius: 999px;
+  font-size: .95rem;
+  line-height: 1.2;
+  font-weight: 900;
+  color: #315777;
+  background: rgba(236, 253, 255, .88);
+  border: 1px solid rgba(255,255,255,.72);
+  box-shadow: 0 8px 18px rgba(15,23,42,.10);
+}
+
+.level-screen-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  padding: 30px 16px 0;
+}
+
+.level-logo-wrap { width: 100%; }
+.level-logo { width: clamp(280px, 22vw, 350px); max-height: 180px; }
+
+.level-panel {
+  width: min(800px, 78vw);
+  border-radius: 28px;
+  padding: 24px 20px 24px;
+  background: radial-gradient(circle at 20% 0%, rgba(255,255,255,.70), transparent 36%), var(--card);
+  border: 2px solid var(--card-border);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.72);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+}
+.level-head { text-align: center; margin-bottom: 8px; }
+.level-title { margin: 0 0 4px; font-size: 2rem; line-height: 1.05; font-weight: 900; color: var(--text); text-shadow: 0 2px 0 rgba(255,255,255,.65); }
+.level-subtitle { margin: 0; font-size: .95rem; line-height: 1.35; font-weight: 900; color: #315777; }
+
+.level-map {
+  width: max-content;
+  max-width: 100%;
+  margin: 10px auto;
+  display: grid;
+  grid-template-columns: repeat(5, 88px);
+  gap: 15px 22px;
+  justify-content: center;
+  align-content: start;
+}
+.level-wrap { width: 88px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.level-node {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  border: 0;
+  border-radius: 16px;
+  cursor: pointer;
+  overflow: hidden;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 5px 5px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.04)), linear-gradient(180deg, var(--blue1) 0%, #46b4f3 52%, var(--blue2) 100%);
+  box-shadow: 0 5px 0 #2f8bc9, 0 12px 22px rgba(35,149,221,.22);
+  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+}
+.level-node::before { content: ""; position: absolute; inset: 2px; border-radius: 14px; border: 2px solid rgba(255,255,255,.82); pointer-events: none; }
+.level-node::after { content: ""; position: absolute; inset: 6px 6px auto 6px; height: 30px; border-radius: 9px; background: linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,.02)); pointer-events: none; }
+.level-node:not(.locked):hover { transform: translateY(-3px) scale(1.03); filter: saturate(1.04); }
+.level-node.locked {
+  cursor: not-allowed;
+  background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.03)), linear-gradient(180deg, var(--gray1) 0%, #b6b6b6 55%, var(--gray2) 100%);
+  box-shadow: 0 5px 0 #858585, 0 12px 20px rgba(120,120,120,.18);
+}
+.level-label-main,.level-number-main,.level-stars,.level-lock { position: relative; z-index: 2; }
+.level-label-main { margin-top: 0; font-size: .58rem; line-height: 1; font-weight: 900; color: rgba(255,255,255,.96); }
+.level-number-main { margin-top: 2px; font-size: 2.45rem; line-height: 1; font-weight: 900; color: #fff; }
+.level-stars { min-height: 20px; margin-top: auto; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; line-height: 1; }
+.level-lock { margin: auto  5px; font-size: 1.5rem; line-height: 1; }
+.star-on { color: #ffd84d; text-shadow: 0 1px 0 #b07a00; }
+.star-off { color: rgba(31,90,139,.72); }
+.level-name { width: 88px; min-height: 28px; text-align: center; font-size: .72rem; line-height: 1.12; font-weight: 900; color: var(--text); }
+.level-status { width: min(560px, 100%); height: 36px; margin: 12px auto 0; padding: 0 18px; display: flex; align-items: center; justify-content: center; border-radius: 999px; font-size: .92rem; font-weight: 900; color: #14532d; background: rgba(220,252,231,.82); border: 1px solid rgba(255,255,255,.70); box-shadow: 0 8px 18px rgba(15,23,42,.08); }
+
+.game-screen-inner { width: 100%; height: 100%; padding: 26px 24px 28px; display: flex; flex-direction: column; gap: 12px; }
+.game-topbar { width: min(1120px, 72vw); margin: 0 auto; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; padding: 8px 14px; border-radius: 28px; background: rgba(255,255,255,.52); border: 2px solid rgba(255,255,255,.62); box-shadow: 0 16px 38px rgba(15,23,42,.16); backdrop-filter: blur(12px); }
+.game-logo { width: min(165px, 11vw); max-height: 58px; }
+.hud-strip { display: grid; grid-template-columns: repeat(4, minmax(110px, 1fr)); gap: 10px; }
+.hud-pill { min-height: 56px; border-radius: 20px; padding: 8px 12px; background: rgba(255,255,255,.78); border: 1px solid rgba(255,255,255,.82); box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 8px 18px rgba(15,23,42,.09); color: var(--text); display: flex; flex-direction: column; justify-content: center; }
+.hud-label { font-size: .72rem; line-height: 1; font-weight: 900; opacity: .72; margin-bottom: 4px; }
+.hud-value { font-size: 1.22rem; line-height: 1.05; font-weight: 900; white-space: nowrap; }
+.small-btn { border: 0; min-height: 44px; padding: 9px 15px; border-radius: 17px; cursor: pointer; font-size: .95rem; font-weight: 900; color: #075985; background: #e0f2fe; box-shadow: 0 8px 18px rgba(15,23,42,.10); }
+.game-panel { width: min(900px, 66vw); margin: 0 auto; padding: 22px 28px 26px; border-radius: 32px; background: rgba(255,255,255,.92); border: 2px solid rgba(255,255,255,.82); box-shadow: var(--shadow); }
+.mission-title { margin: 0; text-align: center; font-size: 1.9rem; line-height: 1.15; font-weight: 900; color: var(--text); }
+.mission-subtitle { margin: 6px auto 14px; text-align: center; color: var(--muted); font-weight: 900; line-height: 1.45; }
+.sound-row { display: flex; justify-content: center; gap: 12px; margin: 12px 0 18px; }
+.sound-button { width: 230px; height: 56px; border: 0; border-radius: 21px; cursor: pointer; color: white; font-size: 1.15rem; font-weight: 900; background: linear-gradient(135deg, #2563eb, #06b6d4); box-shadow: 0 10px 24px rgba(37,99,235,.25); }
+.answer-zone-wrap { display: flex; justify-content: center; margin: 12px 0 20px; }
+.answer-zone { width: 300px; height: 122px; border-radius: 30px; border: 5px dashed #93c5fd; background: radial-gradient(circle at center, rgba(96,165,250,.13), transparent 58%), #f8fcff; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 8px rgba(219,234,254,.68); color: #1d4ed8; font-size: 4.05rem; font-weight: 900; line-height: 1; text-align: center; padding: 16px; }
+.answer-zone .placeholder { font-size: 1.05rem; color: #7a93ad; font-weight: 900; }
+.letter-grid { width: min(740px, 100%); margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.letter-card { min-height: 96px; border: 0; border-radius: 24px; cursor: pointer; color: #5a3a00; font-size: 3.1rem; line-height: 1; font-weight: 900; background: radial-gradient(circle at 22% 18%, rgba(255,255,255,.58), transparent 24%), linear-gradient(145deg, #fff7c2, #facc15); box-shadow: 0 10px 0 #d9a600, 0 16px 24px rgba(0,0,0,.14); user-select: none; }
+.letter-card.correct { color: #064e3b; background: radial-gradient(circle at 22% 18%, rgba(255,255,255,.58), transparent 24%), linear-gradient(145deg, #bbf7d0, #22c55e); box-shadow: 0 11px 0 #15803d, 0 18px 26px rgba(0,0,0,.14); }
+.letter-card.wrong { color: #7f1d1d; background: radial-gradient(circle at 22% 18%, rgba(255,255,255,.58), transparent 24%), linear-gradient(145deg, #fecaca, #f87171); box-shadow: 0 11px 0 #dc2626, 0 18px 26px rgba(0,0,0,.14); }
+.feedback { min-height: 44px; margin-top: 18px; text-align: center; font-size: 1.35rem; line-height: 1.4; font-weight: 900; display: flex; align-items: center; justify-content: center; }
+.feedback.good { color: #15803d; }
+.feedback.bad { color: #c2410c; }
+
+.result-screen-inner { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.result-panel { width: min(720px, 90vw); border-radius: 34px; padding: 34px; text-align: center; background: rgba(255,255,255,.92); border: 2px solid rgba(255,255,255,.82); box-shadow: var(--shadow); }
+.result-title { margin: 0; font-size: 2.35rem; line-height: 1.15; font-weight: 900; color: var(--text); }
+.result-stars { margin: 16px 0 6px; font-size: 5.2rem; line-height: 1; text-shadow: 0 5px 0 rgba(0,0,0,.12); }
+.result-score { margin: 8px 0 18px; font-size: 2rem; line-height: 1.2; font-weight: 900; color: #1d4ed8; }
+.result-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+.primary-action,.secondary-action { border: 0; min-width: 190px; height: 58px; border-radius: 22px; cursor: pointer; font-size: 1.1rem; font-weight: 900; }
+.primary-action { color: #fff; background: linear-gradient(135deg, #16a34a, #22c55e); box-shadow: 0 10px 22px rgba(34,197,94,.25); }
+.secondary-action { color: #075985; background: #e0f2fe; box-shadow: 0 10px 22px rgba(14,165,233,.16); }
+.bgm-toggle {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 14px);
+  right: calc(env(safe-area-inset-right, 0px) + 14px);
+  z-index: 1300;
+
+  width: 52px;
+  height: 52px;
+  border: 0;
+  border-radius: 18px;
+
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1.35rem;
+  color: #075985;
+  background: rgba(224, 242, 254, .92);
+  border: 1px solid rgba(255,255,255,.82);
+  box-shadow: 0 10px 22px rgba(15,23,42,.16);
+  backdrop-filter: blur(10px);
+
+  transition: transform .14s ease, filter .14s ease, opacity .14s ease;
+}
+
+.bgm-toggle:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+}
+
+.bgm-toggle:active {
+  transform: translateY(2px);
+}
+
+.bgm-toggle.off {
+  opacity: .72;
+  color: #7f1d1d;
+  background: rgba(254, 226, 226, .92);
+}
+
+@media (max-width: 560px) {
+  .bgm-toggle {
+    width: 46px;
+    height: 46px;
+    top: calc(env(safe-area-inset-top, 0px) + 10px);
+    right: calc(env(safe-area-inset-right, 0px) + 10px);
+    border-radius: 16px;
+    font-size: 1.15rem;
+  }
+}
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none; padding: 12px 18px; border-radius: 999px; background: rgba(15,23,42,.88); color: white; font-weight: 900; z-index: 999; transition: .18s ease; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, .34);
+  backdrop-filter: blur(10px);
+}
+.loading-overlay.show {
+  display: flex;
+}
+.loading-card {
+  width: min(520px, 92vw);
+  border-radius: 34px;
+  padding: 30px 34px 28px;
+  text-align: center;
+  color: var(--text);
+  background: rgba(255, 255, 255, .94);
+  border: 2px solid rgba(255, 255, 255, .82);
+  box-shadow: 0 26px 70px rgba(15, 23, 42, .28);
+}
+.loading-icon {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 12px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  background: linear-gradient(135deg, #dbeafe, #cffafe);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.85), 0 10px 24px rgba(14,165,233,.18);
+  animation: loadingPulse 1.15s ease-in-out infinite;
+}
+@keyframes loadingPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+.loading-title {
+  font-size: 1.75rem;
+  line-height: 1.15;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+.loading-text {
+  display: none;
+  min-height: 0;
+  margin: 0;
+}
+.loading-bar {
+  width: 100%;
+  height: 20px;
+  padding: 4px;
+  border-radius: 999px;
+  background: #dbeafe;
+  box-shadow: inset 0 2px 5px rgba(15, 23, 42, .12);
+  overflow: hidden;
+}
+.loading-bar-fill {
+  position: relative;
+  width: 0%;
+  height: 100%;
+  border-radius: 999px;
+  overflow: hidden;
+  background: linear-gradient(90deg, #22c55e, #38bdf8, #6366f1);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 0 14px rgba(56,189,248,.38);
+  transition: width .22s ease;
+}
+.loading-percent {
+  margin-top: 10px;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #1d4ed8;
+}
+
+    .correct-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(250, 204, 21, .24), transparent 32%),
+    rgba(15, 23, 42, .38);
+  backdrop-filter: blur(10px);
+}
+
+.correct-overlay.show {
+  display: flex;
+  animation: correctFadeIn .18s ease both;
+}
+
+@keyframes correctFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.correct-card {
+  width: min(430px, 92vw);
+  border-radius: 34px;
+  padding: 30px 26px 28px;
+  text-align: center;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255, 255, 255, .9), transparent 38%),
+    linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(236, 253, 255, .94));
+  border: 3px solid rgba(255, 255, 255, .88);
+  box-shadow:
+    0 28px 70px rgba(15, 23, 42, .28),
+    inset 0 1px 0 rgba(255, 255, 255, .9);
+  animation: correctPop .26s cubic-bezier(.2, 1.35, .35, 1) both;
+}
+
+@keyframes correctPop {
+  from {
+    transform: translateY(18px) scale(.86);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.correct-badge {
+  width: 92px;
+  height: 92px;
+  margin: 0 auto 12px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.8rem;
+  background: linear-gradient(145deg, #fef3c7, #facc15);
+  box-shadow:
+    0 10px 0 #d9a600,
+    0 18px 28px rgba(250, 204, 21, .26);
+  animation: correctBadgeBounce 1s ease-in-out infinite;
+}
+
+@keyframes correctBadgeBounce {
+  0%, 100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(3deg);
+  }
+}
+
+.correct-title {
+  margin: 8px 0 6px;
+  font-size: 2.15rem;
+  line-height: 1.1;
+  font-weight: 900;
+  color: #15803d;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, .9);
+}
+
+.correct-text {
+  margin: 0 0 20px;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  font-weight: 900;
+  color: #315777;
+}
+
+.correct-next-btn {
+  width: min(260px, 100%);
+  height: 62px;
+  border: 0;
+  border-radius: 24px;
+  cursor: pointer;
+  font-size: 1.35rem;
+  line-height: 1;
+  font-weight: 900;
+  color: #fff;
+  background: linear-gradient(180deg, #22c55e, #16a34a);
+  box-shadow:
+    0 8px 0 #15803d,
+    0 16px 26px rgba(22, 163, 74, .26);
+  transition: transform .14s ease, filter .14s ease, box-shadow .14s ease;
+}
+
+.correct-next-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+}
+
+.correct-next-btn:active {
+  transform: translateY(5px);
+  box-shadow:
+    0 3px 0 #15803d,
+    0 8px 18px rgba(22, 163, 74, .22);
+}
+
+@media (max-width: 560px) {
+  .correct-card {
+    padding: 26px 20px 24px;
+    border-radius: 30px;
+  }
+
+  .correct-badge {
+    width: 82px;
+    height: 82px;
+    font-size: 3.3rem;
+    border-radius: 26px;
+  }
+
+  .correct-title {
+    font-size: 1.85rem;
+  }
+
+  .correct-next-btn {
+    height: 58px;
+    font-size: 1.2rem;
+  }
+}
+.submit-answer-row {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 20px;
+}
+
+.submit-answer-btn {
+  min-width: 220px;
+  height: 58px;
+  border: 0;
+  border-radius: 23px;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  font-weight: 900;
+  color: #fff;
+  background: linear-gradient(180deg, #22c55e, #16a34a);
+  box-shadow:
+    0 8px 0 #15803d,
+    0 16px 26px rgba(22, 163, 74, .24);
+  transition: transform .14s ease, filter .14s ease, box-shadow .14s ease, opacity .14s ease;
+}
+
+.submit-answer-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+}
+
+.submit-answer-btn:active:not(:disabled) {
+  transform: translateY(5px);
+  box-shadow:
+    0 3px 0 #15803d,
+    0 8px 18px rgba(22, 163, 74, .20);
+}
+
+.submit-answer-btn:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+  filter: grayscale(.35);
+  background: linear-gradient(180deg, #94a3b8, #64748b);
+  box-shadow:
+    0 6px 0 #475569,
+    0 12px 20px rgba(15, 23, 42, .14);
+}
+
+.letter-card.selected {
+  transform: translateY(-5px) scale(1.035);
+  outline: 5px solid #38bdf8;
+  outline-offset: 4px;
+  box-shadow:
+    0 10px 0 #d9a600,
+    0 0 0 8px rgba(186, 230, 253, .88),
+    0 20px 34px rgba(14, 165, 233, .25);
+}
+
+.letter-card:disabled {
+  cursor: default;
+}
+
+@media (max-width: 560px) {
+  .submit-answer-row {
+    margin: -2px 0 16px;
+  }
+
+  .submit-answer-btn {
+    min-width: 200px;
+    height: 54px;
+    border-radius: 21px;
+    font-size: 1.12rem;
+  }
+
+  .letter-card.selected {
+    outline-width: 4px;
+    outline-offset: 3px;
+  }
+}
+
+    /* =========================================================
+   PATCH: เลือกคำตอบ = ปุ่มสีฟ้าเต็มปุ่ม + ลดพื้นที่ว่างด้านล่าง
+   ========================================================= */
+
+/* ปุ่มที่ถูกเลือก เปลี่ยนจากเหลือง+ขอบฟ้า เป็นฟ้าเต็มปุ่ม */
+.letter-card.selected {
+  color: #fff;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.62), transparent 25%),
+    linear-gradient(145deg, #67e8f9, #0ea5e9 58%, #0284c7);
+  box-shadow:
+    0 10px 0 #0369a1,
+    0 18px 30px rgba(14, 165, 233, .30);
+  outline: 4px solid rgba(224, 242, 254, .95);
+  outline-offset: 3px;
+  transform: translateY(-5px) scale(1.035);
+  text-shadow: 0 2px 0 rgba(3, 105, 161, .28);
+}
+
+/* ตอนส่งคำตอบแล้วถูก ต้องกลับเป็นสีเขียว ไม่ให้ selected สีฟ้าทับ */
+.letter-card.selected.correct {
+  color: #064e3b;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.58), transparent 24%),
+    linear-gradient(145deg, #bbf7d0, #22c55e);
+  box-shadow:
+    0 11px 0 #15803d,
+    0 18px 26px rgba(0,0,0,.14);
+  outline: 0;
+  text-shadow: none;
+}
+
+/* ตอนส่งคำตอบแล้วผิด ต้องกลับเป็นสีแดง ไม่ให้ selected สีฟ้าทับ */
+.letter-card.selected.wrong {
+  color: #7f1d1d;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.58), transparent 24%),
+    linear-gradient(145deg, #fecaca, #f87171);
+  box-shadow:
+    0 11px 0 #dc2626,
+    0 18px 26px rgba(0,0,0,.14);
+  outline: 0;
+  text-shadow: none;
+}
+
+/* ลดพื้นที่ด้านล่างของกล่องเกม */
+.game-panel {
+  padding-bottom: 14px 14px 34px 14px;
+}
+
+/* ลดช่องว่างระหว่างปุ่มส่งคำตอบกับการ์ด */
+.submit-answer-row {
+  margin: 10px 0 24px;
+}
+
+/* ตอน feedback ว่าง ไม่ต้องจองพื้นที่ ทำให้ด้านล่างปุ่มไม่โล่ง */
+.feedback:empty {
+  min-height: 0;
+  margin-top: 0;
+}
+
+/* ตอนมี feedback ค่อยให้มีพื้นที่ */
+.feedback:not(:empty) {
+  min-height: 34px;
+  margin-top: 12px;
+}
+
+/* มือถือ/จอเล็ก ลดพื้นที่อีกนิด */
+@media (max-width: 560px) {
+  .game-panel {
+    padding-bottom: 12px;
+  }
+
+  .submit-answer-row {
+    margin: -4px 0 12px;
+  }
+
+  .feedback:not(:empty) {
+    min-height: 30px;
+    margin-top: 10px;
+  }
+
+  .letter-card.selected {
+    outline-width: 3px;
+    outline-offset: 3px;
+    transform: translateY(-4px) scale(1.025);
+  }
+}
+/* =========================================================
+   PATCH: ตัด feedback ออก + จัดระยะใหม่ + เอากรอบขาวปุ่มฟ้าออก
+   ========================================================= */
+
+/* ซ่อนช่อง feedback ด้านล่างการ์ดออกไปเลย */
+.feedback {
+  display: none !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* จัด panel ให้กระชับขึ้น และกระจาย item พอดีขึ้น */
+.game-panel {
+ padding: 24px 24px 34px 24px;
+}
+
+/* หัวข้อกับคำอธิบาย ลดระยะลงนิดหนึ่ง */
+.mission-title {
+  margin-bottom: 4px;
+}
+
+.mission-subtitle {
+  margin: 4px auto 12px;
+}
+
+/* ปุ่มฟังเสียง */
+.sound-row {
+  margin: 8px 0 14px;
+}
+
+/* ช่องคำตอบ */
+.answer-zone-wrap {
+  margin: 8px 0 18px;
+}
+
+/* ปุ่มส่งคำตอบ */
+.submit-answer-row {
+  margin: 0 0 25px;
+}
+
+/* การ์ดตัวเลือก */
+.letter-grid {
+  margin-top: 0;
+}
+
+/* ปุ่มที่ถูกเลือก: เอากรอบขาวออก */
+.letter-card.selected {
+  outline: 0 !important;
+  outline-offset: 0 !important;
+  color: #fff;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.56), transparent 25%),
+    linear-gradient(145deg, #67e8f9, #0ea5e9 58%, #0284c7);
+  box-shadow:
+    0 10px 0 #0369a1,
+    0 18px 30px rgba(14, 165, 233, .28);
+  transform: translateY(-4px) scale(1.025);
+  text-shadow: 0 2px 0 rgba(3, 105, 161, .28);
+}
+
+/* ตอนตอบถูก/ผิด ไม่ให้มีกรอบขาวติดมาด้วย */
+.letter-card.selected.correct,
+.letter-card.selected.wrong {
+  outline: 0 !important;
+  outline-offset: 0 !important;
+}
+
+/* จอเล็ก ลดระยะอีกนิด */
+@media (max-width: 560px) {
+  .game-panel {
+    padding: 18px 18px 14px;
+  }
+
+  .mission-subtitle {
+    margin: 3px auto 10px;
+  }
+
+  .sound-row {
+    margin: 8px 0 12px;
+  }
+
+  .answer-zone-wrap {
+    margin: 6px 0 10px;
+  }
+
+  .submit-answer-row {
+    margin: 0 0 12px;
+  }
+
+  .letter-card.selected {
+    transform: translateY(-3px) scale(1.02);
+  }
+}
+
+/* =========================================================
+   PATCH: overlay ตอบผิด - ลองใหม่นะ
+   ========================================================= */
+
+.wrong-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(251, 146, 60, .22), transparent 32%),
+    rgba(15, 23, 42, .34);
+  backdrop-filter: blur(10px);
+}
+
+.wrong-overlay.show {
+  display: flex;
+  animation: wrongFadeIn .18s ease both;
+}
+
+@keyframes wrongFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.wrong-card {
+  width: min(400px, 92vw);
+  border-radius: 32px;
+  padding: 28px 24px 26px;
+  text-align: center;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255, 255, 255, .88), transparent 38%),
+    linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(255, 247, 237, .94));
+  border: 3px solid rgba(255, 255, 255, .88);
+  box-shadow:
+    0 26px 68px rgba(15, 23, 42, .26),
+    inset 0 1px 0 rgba(255, 255, 255, .9);
+  animation: wrongPop .24s cubic-bezier(.2, 1.25, .35, 1) both;
+}
+
+@keyframes wrongPop {
+  from {
+    transform: translateY(16px) scale(.9);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.wrong-badge {
+  width: 82px;
+  height: 82px;
+  margin: 0 auto 12px;
+  border-radius: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.2rem;
+  background: linear-gradient(145deg, #ffedd5, #fb923c);
+  box-shadow:
+    0 9px 0 #ea580c,
+    0 16px 26px rgba(249, 115, 22, .24);
+}
+
+.wrong-title {
+  margin: 8px 0 6px;
+  font-size: 2rem;
+  line-height: 1.1;
+  font-weight: 900;
+  color: #c2410c;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, .9);
+}
+
+.wrong-text {
+  margin: 0 0 20px;
+  font-size: 1.02rem;
+  line-height: 1.4;
+  font-weight: 900;
+  color: #7c3f16;
+}
+
+.wrong-retry-btn {
+  width: min(240px, 100%);
+  height: 60px;
+  border: 0;
+  border-radius: 23px;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  font-weight: 900;
+  color: #fff;
+  background: linear-gradient(180deg, #fb923c, #f97316);
+  box-shadow:
+    0 8px 0 #c2410c,
+    0 16px 26px rgba(249, 115, 22, .24);
+  transition: transform .14s ease, filter .14s ease, box-shadow .14s ease;
+}
+
+.wrong-retry-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+}
+
+.wrong-retry-btn:active {
+  transform: translateY(5px);
+  box-shadow:
+    0 3px 0 #c2410c,
+    0 8px 18px rgba(249, 115, 22, .20);
+}
+
+@media (max-width: 560px) {
+  .wrong-card {
+    padding: 24px 20px 22px;
+    border-radius: 28px;
+  }
+
+  .wrong-badge {
+    width: 74px;
+    height: 74px;
+    font-size: 2.9rem;
+    border-radius: 24px;
+  }
+
+  .wrong-title {
+    font-size: 1.75rem;
+  }
+
+  .wrong-retry-btn {
+    height: 56px;
+    font-size: 1.12rem;
+  }
+}
+
+    .app-credit {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+  transform: translateX(-50%);
+  z-index: 900;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  max-width: min(92vw, 720px);
+  padding: 6px 14px;
+  border-radius: 999px;
+
+  font-size: .74rem;
+  line-height: 1.2;
+  font-weight: 800;
+  color: rgba(24, 52, 95, .76);
+
+  background: rgba(255, 255, 255, .54);
+  border: 1px solid rgba(255, 255, 255, .62);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, .08);
+  backdrop-filter: blur(8px);
+
+  pointer-events: none;
+  user-select: none;
+}
+
+.app-credit span:not(:last-child)::after {
+  content: "•";
+  margin-left: 8px;
+  opacity: .55;
+}
+
+@media (max-width: 560px) {
+  .app-credit {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 7px);
+    padding: 5px 10px;
+    font-size: .62rem;
+    gap: 4px;
+    max-width: 94vw;
+  }
+
+  .app-credit span:not(:last-child)::after {
+    margin-left: 5px;
+  }
+}
+/* =========================================================
+   PATCH: Level pagination + arrows + slide animation
+   ========================================================= */
+
+.level-pager {
+  position: relative;
+  width: min(720px, 100%);
+  margin: 0 auto;
+}
+
+.level-map-viewport {
+  width: 100%;
+  min-height: 268px;
+  overflow: hidden;
+  display: block;
+}
+
+.level-page-btn {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+
+  width: 54px;
+  height: 54px;
+  border: 0;
+  border-radius: 20px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  font-size: 1.55rem;
+  line-height: 1;
+  font-weight: 900;
+  color: #075985;
+
+  background: rgba(224, 242, 254, .92);
+  border: 2px solid rgba(255, 255, 255, .82);
+  box-shadow:
+    0 7px 0 rgba(14, 116, 144, .28),
+    0 14px 24px rgba(15, 23, 42, .14);
+  backdrop-filter: blur(10px);
+
+  transform: translateY(-50%);
+  transition: transform .14s ease, opacity .14s ease, filter .14s ease;
+}
+
+.level-page-btn:hover:not(:disabled) {
+  transform: translateY(calc(-50% - 2px));
+  filter: brightness(1.04);
+}
+
+.level-page-btn:active:not(:disabled) {
+  transform: translateY(calc(-50% + 4px));
+}
+
+.level-page-btn:disabled {
+  opacity: .26;
+  cursor: not-allowed;
+  filter: grayscale(.35);
+}
+
+.level-page-prev {
+  left: 0;
+}
+
+.level-page-next {
+  right: 0;
+}
+
+/* เว้นพื้นที่ซ้าย-ขวาให้ลูกศร */
+.level-map {
+  padding-left: 72px;
+  padding-right: 72px;
+}
+
+/* animation เวลาไปหน้าถัดไป */
+.level-map.slide-next {
+  animation: levelSlideFromRight .28s cubic-bezier(.2, .95, .25, 1) both;
+}
+
+/* animation เวลากลับหน้าก่อนหน้า */
+.level-map.slide-prev {
+  animation: levelSlideFromLeft .28s cubic-bezier(.2, .95, .25, 1) both;
+}
+
+@keyframes levelSlideFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(58px) scale(.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes levelSlideFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-58px) scale(.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* ไม่ใช้ level-status แล้ว */
+.level-status {
+  display: none !important;
+}
+
+@media (max-width: 560px) {
+  .level-pager {
+    width: 100%;
+  }
+
+  .level-map-viewport {
+    min-height: 250px;
+  }
+
+  .level-page-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 16px;
+    font-size: 1.2rem;
+  }
+
+  .level-map {
+    padding-left: 52px;
+    padding-right: 52px;
+  }
+
+  .level-page-prev {
+    left: 2px;
+  }
+
+  .level-page-next {
+    right: 2px;
+  }
+}
+
+    /* =========================================================
+   PATCH: ลดพื้นที่ว่างของ level viewport
+   ========================================================= */
+
+.level-map-viewport {
+  min-height: 0 !important;
+  height: auto !important;
+  overflow: hidden;
+}
+
+.level-pager {
+  margin-bottom: 0 !important;
+}
+
+.level-map {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.level-panel {
+  padding-bottom: 30px !important;
+}
+
+/* ลดช่องว่างด้านล่างชื่อ Level แต่ละปุ่ม */
+.level-wrap {
+  margin-bottom: 0 !important;
+}
+
+.level-name {
+  min-height: 22px;
+}
+
+    /* =========================================================
+   PATCH: ย้ายปุ่มลูกศรไปอยู่ระหว่างแถว 1 กับแถว 2
+   ========================================================= */
+
+.level-pager {
+  position: relative;
+}
+
+/* บังคับลูกศรให้อยู่ระหว่างแถวบนกับแถวล่าง */
+.level-page-btn {
+  top: 128px !important;
+  transform: translateY(-50%) !important;
+}
+
+/* ลูกศรซ้าย */
+.level-page-prev {
+  left: 18px !important;
+}
+
+/* ลูกศรขวา */
+.level-page-next {
+  right: 18px !important;
+}
+
+/* กัน hover/active แล้วตำแหน่งเพี้ยน */
+.level-page-btn:hover:not(:disabled) {
+  transform: translateY(calc(-50% - 2px)) !important;
+}
+
+.level-page-btn:active:not(:disabled) {
+  transform: translateY(calc(-50% + 4px)) !important;
+}
+
+/* จอเล็ก ขยับขึ้นนิดและชิดขอบน้อยลง */
+@media (max-width: 560px) {
+  .level-page-btn {
+    top: 118px !important;
+  }
+
+  .level-page-prev {
+    left: 4px !important;
+  }
+
+  .level-page-next {
+    right: 4px !important;
+  }
+}
+    /* =========================================================
+   PATCH: ปุ่มเลื่อน Level เป็นเครื่องหมาย < > เพียว ๆ
+   ========================================================= */
+
+.level-page-btn {
+  width: 48px !important;
+  height: 72px !important;
+
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+
+  font-size: 4rem !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  color: #075985 !important;
+
+  text-shadow:
+    0 3px 0 rgba(255, 255, 255, .72),
+    0 8px 18px rgba(15, 23, 42, .18);
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  cursor: pointer;
+  opacity: .92;
+  transition: transform .14s ease, opacity .14s ease, filter .14s ease;
+}
+
+.level-page-btn:hover:not(:disabled) {
+  transform: translateY(calc(-50% - 2px)) scale(1.08) !important;
+  filter: brightness(1.05);
+  opacity: 1;
+}
+
+.level-page-btn:active:not(:disabled) {
+  transform: translateY(calc(-50% + 3px)) scale(.96) !important;
+}
+
+.level-page-btn:disabled {
+  opacity: .16 !important;
+  cursor: not-allowed;
+  filter: grayscale(.5);
+}
+
+/* ขยับให้เครื่องหมายชิดขอบซ้าย-ขวาสวยขึ้น */
+.level-page-prev {
+  left: 12px !important;
+}
+
+.level-page-next {
+  right: 12px !important;
+}
+
+@media (max-width: 560px) {
+  .level-page-btn {
+    width: 38px !important;
+    height: 58px !important;
+    font-size: 3rem !important;
+  }
+
+  .level-page-prev {
+    left: 0 !important;
+  }
+
+  .level-page-next {
+    right: 0 !important;
+  }
+}
+
+    /* =========================================================
+   PATCH: ให้ level panel สูงเท่า 2 แถวเสมอ แม้มี Level แถวเดียว
+   ========================================================= */
+
+.level-pager {
+  min-height: 252px !important;
+}
+
+.level-map-viewport {
+  min-height: 252px !important;
+  height: auto !important;
+  overflow: hidden;
+}
+
+/* ให้ปุ่ม Level เริ่มจากแถวบนเสมอ ไม่ต้องจัดกลางแนวตั้ง */
+.level-map {
+  align-content: start !important;
+}
+
+/* ตำแหน่งลูกศรให้อยู่ระหว่างแถว 1 กับแถว 2 */
+.level-page-btn {
+  top: 128px !important;
+}
+
+    /* =========================================================
+   PATCH: ปรับปุ่ม < >
+   - อ้าปากกว้างขึ้น
+   - ชิดขอบขึ้น
+   - สีอ่อนลง
+   ========================================================= */
+
+.level-page-btn {
+  width: 44px !important;
+  height: 72px !important;
+
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  font-size: 4rem !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+
+  color: rgba(7, 89, 133, 0.42) !important;
+  text-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.65),
+    0 6px 12px rgba(15, 23, 42, 0.08);
+
+  cursor: pointer;
+  opacity: 1;
+  transition: transform .14s ease, color .14s ease, opacity .14s ease;
+}
+
+/* อ้าปากกว้างขึ้น */
+.level-page-prev {
+  left: 2px !important;
+  transform: translateY(-50%) scaleX(1.35) !important;
+}
+
+.level-page-next {
+  right: 2px !important;
+  transform: translateY(-50%) scaleX(1.35) !important;
+}
+
+/* hover */
+.level-page-prev:hover:not(:disabled),
+.level-page-next:hover:not(:disabled) {
+  color: rgba(7, 89, 133, 0.62) !important;
+  transform: translateY(calc(-50% - 2px)) scaleX(1.42) !important;
+}
+
+/* active */
+.level-page-prev:active:not(:disabled),
+.level-page-next:active:not(:disabled) {
+  color: rgba(7, 89, 133, 0.7) !important;
+  transform: translateY(calc(-50% + 2px)) scaleX(1.28) !important;
+}
+
+/* disabled */
+.level-page-btn:disabled {
+  color: rgba(7, 89, 133, 0.16) !important;
+  cursor: not-allowed;
+  text-shadow: none;
+}
+
+/* มือถือ */
+@media (max-width: 560px) {
+  .level-page-btn {
+    width: 34px !important;
+    height: 58px !important;
+    font-size: 3rem !important;
+  }
+
+  .level-page-prev {
+    left: 0 !important;
+    transform: translateY(-50%) scaleX(1.28) !important;
+  }
+
+  .level-page-next {
+    right: 0 !important;
+    transform: translateY(-50%) scaleX(1.28) !important;
+  }
+
+  .level-page-prev:hover:not(:disabled),
+  .level-page-next:hover:not(:disabled) {
+    transform: translateY(calc(-50% - 2px)) scaleX(1.34) !important;
+  }
+
+  .level-page-prev:active:not(:disabled),
+  .level-page-next:active:not(:disabled) {
+    transform: translateY(calc(-50% + 2px)) scaleX(1.22) !important;
+  }
+}
+
+    /* =========================================================
+   PATCH: ปุ่มลูกศรเลื่อนหน้าแบบตัวอย่าง
+   - ทรงลูกศรใกล้ตัวอย่าง
+   - สีอ่อนลง
+   - อยู่ระหว่างแถว 1 กับ 2
+   - hover แล้วไม่หัวขาด
+   ========================================================= */
+
+/* ให้กรอบรอบ ๆ ไม่ตัดลูกศรตอน hover */
+.level-panel,
+.level-pager,
+.level-screen-inner {
+  overflow: visible !important;
+}
+
+/* ความสูงของ panel ให้เท่า 2 แถวเสมอ */
+.level-pager {
+  position: relative;
+  min-height: 252px !important;
+}
+
+.level-map-viewport {
+  min-height: 252px !important;
+  height: auto !important;
+  overflow: hidden;
+}
+
+.level-map {
+  align-content: start !important;
+  padding-left: 64px !important;
+  padding-right: 64px !important;
+}
+
+/* -------------------------
+   ลูกศรเลื่อนหน้า
+   ------------------------- */
+.level-page-btn {
+  position: absolute;
+  top: 128px !important;   /* อยู่ระหว่างแถว 1 กับ 2 */
+  z-index: 10;
+
+  width: 44px !important;
+  height: 64px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+
+  font-size: 3.5rem !important;
+  line-height: .9 !important;
+  font-weight: 700 !important;
+  font-family: "Segoe UI Symbol", "Arial Unicode MS", sans-serif !important;
+
+  color: rgba(255, 255, 255, 0.78) !important;
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.55),
+    0 2px 8px rgba(15, 23, 42, .12);
+
+  cursor: pointer;
+  transform: translateY(-50%) scaleX(1.08) !important;
+  transform-origin: center center;
+  transition:
+    transform .12s ease,
+    color .12s ease,
+    opacity .12s ease,
+    filter .12s ease;
+}
+
+/* ชิดขอบขึ้นอีกนิด */
+.level-page-prev {
+  left: 6px !important;
+}
+
+.level-page-next {
+  right: 6px !important;
+}
+
+/* hover: ขยายเบา ๆ พอ ไม่กระเด้งขึ้นจนโดนตัด */
+.level-page-btn:hover:not(:disabled) {
+  color: rgba(255, 255, 255, 0.96) !important;
+  filter: brightness(1.02);
+  transform: translateY(-50%) scaleX(1.14) scaleY(1.06) !important;
+}
+
+/* active */
+.level-page-btn:active:not(:disabled) {
+  color: rgba(255, 255, 255, 1) !important;
+  transform: translateY(-50%) scaleX(1.02) scaleY(.98) !important;
+}
+
+/* disabled */
+.level-page-btn:disabled {
+  opacity: .22 !important;
+  cursor: not-allowed;
+  text-shadow: none;
+  filter: grayscale(.15);
+}
+
+/* มือถือ */
+@media (max-width: 560px) {
+  .level-pager {
+    min-height: 240px !important;
+  }
+
+  .level-map-viewport {
+    min-height: 240px !important;
+  }
+
+  .level-map {
+    padding-left: 46px !important;
+    padding-right: 46px !important;
+  }
+
+  .level-page-btn {
+    top: 118px !important;
+    width: 34px !important;
+    height: 54px !important;
+    font-size: 2.7rem !important;
+    transform: translateY(-50%) scaleX(1.06) !important;
+  }
+
+  .level-page-prev {
+    left: 2px !important;
+  }
+
+  .level-page-next {
+    right: 2px !important;
+  }
+
+  .level-page-btn:hover:not(:disabled) {
+    transform: translateY(-50%) scaleX(1.1) scaleY(1.04) !important;
+  }
+
+  .level-page-btn:active:not(:disabled) {
+    transform: translateY(-50%) scaleX(1.0) scaleY(.98) !important;
+  }
+}
+
+
+  
+/* =========================================================
+   MOBILE APP OVERRIDE - Word Quest Mobile
+   ใช้กับ repo mobile โดยเฉพาะ
+   ========================================================= */
+
+@media (max-width: 900px), (pointer: coarse) {
+  html,
+  body {
+    width: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+  }
+
+  .app {
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 18% 14%, rgba(56,189,248,.25), transparent 32%),
+      radial-gradient(circle at 84% 26%, rgba(250,204,21,.18), transparent 30%),
+      var(--mobile-bg),
+      var(--desktop-bg),
+      linear-gradient(135deg, #7dd3fc 0%, #38bdf8 42%, #22c55e 100%);
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .screen {
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden;
+  }
+
+  button {
+    min-height: 44px;
+  }
+
+  /* ---------- Start Screen ---------- */
+
+  .home-screen-inner {
+    height: 100dvh;
+    justify-content: center;
+    gap: 14px;
+    padding:
+      calc(env(safe-area-inset-top, 0px) + 12px)
+      18px
+      calc(env(safe-area-inset-bottom, 0px) + 48px);
+  }
+
+  .home-logo {
+    width: min(82vw, 330px);
+    max-height: 210px;
+  }
+
+  .play-button,
+  .home-load-status {
+    width: min(78vw, 300px);
+    height: 66px;
+    border-radius: 24px;
+  }
+
+  .play-button {
+    font-size: 1.75rem;
+  }
+
+  .home-hint {
+    min-width: 0;
+    max-width: min(82vw, 310px);
+    padding: 7px 14px;
+    font-size: .86rem;
+  }
+
+  /* ---------- Level Screen ---------- */
+
+  .level-screen-inner {
+    height: 100dvh;
+    gap: 10px;
+    padding:
+      calc(env(safe-area-inset-top, 0px) + 12px)
+      10px
+      calc(env(safe-area-inset-bottom, 0px) + 34px);
+    justify-content: flex-start;
+  }
+
+  .level-logo {
+    width: min(58vw, 250px);
+    max-height: 120px;
+  }
+
+  .level-panel {
+    width: min(94vw, 430px);
+    border-radius: 24px;
+    padding: 17px 10px 18px !important;
+  }
+
+  .level-head {
+    margin-bottom: 6px;
+  }
+
+  .level-title {
+    font-size: 1.55rem;
+    margin-bottom: 3px;
+  }
+
+  .level-subtitle {
+    font-size: .74rem;
+    line-height: 1.25;
+  }
+
+  :root {
+    --mobile-level-node: 52px;
+    --mobile-level-gap-x: 7px;
+    --mobile-level-gap-y: 12px;
+    --mobile-level-pager-height: 174px;
+  }
+
+  .level-pager {
+    width: 100% !important;
+    height: var(--mobile-level-pager-height) !important;
+    min-height: var(--mobile-level-pager-height) !important;
+    max-height: var(--mobile-level-pager-height) !important;
+  }
+
+  .level-map-viewport {
+    height: var(--mobile-level-pager-height) !important;
+    min-height: var(--mobile-level-pager-height) !important;
+    max-height: var(--mobile-level-pager-height) !important;
+    overflow: hidden !important;
+  }
+
+  .level-map {
+    grid-template-columns: repeat(5, var(--mobile-level-node)) !important;
+    gap: var(--mobile-level-gap-y) var(--mobile-level-gap-x) !important;
+    width: max-content !important;
+    max-width: 100% !important;
+    margin: 8px auto 0 !important;
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+  }
+
+  .level-wrap {
+    width: var(--mobile-level-node) !important;
+    gap: 5px !important;
+  }
+
+  .level-node {
+    width: var(--mobile-level-node) !important;
+    height: var(--mobile-level-node) !important;
+    border-radius: 12px !important;
+    padding: 4px 3px 3px !important;
+    box-shadow: 0 4px 0 #2f8bc9, 0 8px 15px rgba(35,149,221,.18) !important;
+  }
+
+  .level-node::before {
+    inset: 2px !important;
+    border-radius: 10px !important;
+    border-width: 1.5px !important;
+  }
+
+  .level-node::after {
+    inset: 5px 5px auto 5px !important;
+    height: 18px !important;
+    border-radius: 7px !important;
+  }
+
+  .level-node.locked {
+    box-shadow: 0 4px 0 #858585, 0 8px 15px rgba(120,120,120,.14) !important;
+  }
+
+  .level-label-main {
+    font-size: .42rem !important;
+  }
+
+  .level-number-main {
+    margin-top: 0 !important;
+    font-size: 1.55rem !important;
+  }
+
+  .level-stars {
+    min-height: 12px !important;
+    font-size: 1rem !important;
+  }
+
+  .level-lock {
+    font-size: .98rem !important;
+  }
+
+  .level-name {
+    width: var(--mobile-level-node) !important;
+    min-height: 21px !important;
+    font-size: .5rem !important;
+    line-height: 1.08 !important;
+  }
+
+  .level-page-btn {
+    top: 86px !important;
+    width: 28px !important;
+    height: 48px !important;
+    font-size: 2.25rem !important;
+    color: rgba(255,255,255,.86) !important;
+    text-shadow: 0 2px 6px rgba(15,23,42,.12) !important;
+    transform: translateY(-50%) scaleX(1.05) !important;
+  }
+
+  .level-page-prev {
+    left: 2px !important;
+  }
+
+  .level-page-next {
+    right: 2px !important;
+  }
+
+  .level-page-btn:hover:not(:disabled),
+  .level-page-btn:active:not(:disabled) {
+    transform: translateY(-50%) scaleX(1.08) !important;
+  }
+
+  /* ---------- Game Screen ---------- */
+
+  .game-screen-inner {
+    height: 100dvh;
+    padding:
+      calc(env(safe-area-inset-top, 0px) + 8px)
+      10px
+      calc(env(safe-area-inset-bottom, 0px) + 10px);
+    gap: 8px;
+  }
+
+  .game-topbar {
+    width: 100%;
+    margin: 0 auto;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    padding: 7px 8px;
+    border-radius: 20px;
+  }
+
+  .game-logo-wrap {
+    display: none !important;
+  }
+
+  .hud-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .hud-pill {
+    min-height: 46px;
+    border-radius: 15px;
+    padding: 6px 6px;
+  }
+
+  .hud-label {
+    font-size: .55rem;
+    margin-bottom: 3px;
+  }
+
+  .hud-value {
+    font-size: .85rem;
+  }
+
+  .small-btn {
+    min-height: 40px;
+    padding: 7px 9px;
+    border-radius: 14px;
+    font-size: .72rem;
+    white-space: nowrap;
+  }
+
+  .game-panel {
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0 auto;
+    padding: 14px 12px 16px !important;
+    border-radius: 26px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .mission-title {
+    font-size: 1.38rem;
+    line-height: 1.18;
+  }
+
+  .mission-subtitle {
+    margin: 3px auto 8px;
+    font-size: .78rem;
+    line-height: 1.2;
+  }
+
+  .sound-row {
+    margin: 6px 0 10px;
+  }
+
+  .sound-button {
+    width: min(70vw, 240px);
+    height: 50px;
+    border-radius: 18px;
+    font-size: 1rem;
+  }
+
+  .answer-zone-wrap {
+    margin: 6px 0 10px;
+  }
+
+  .answer-zone {
+    width: min(68vw, 240px);
+    height: 88px;
+    border-radius: 24px;
+    border-width: 4px;
+    font-size: 3.15rem;
+    padding: 10px;
+    box-shadow: inset 0 0 0 6px rgba(219,234,254,.62);
+  }
+
+  .answer-zone .placeholder {
+    font-size: .82rem;
+  }
+
+  .submit-answer-row {
+    margin: 0 0 12px !important;
+  }
+
+  .submit-answer-btn {
+    min-width: min(62vw, 230px);
+    height: 52px;
+    border-radius: 20px;
+    font-size: 1.1rem;
+  }
+
+  .letter-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: auto;
+  }
+
+  .letter-card {
+    min-height: 76px;
+    border-radius: 22px;
+    font-size: 2.65rem;
+    box-shadow: 0 8px 0 #d9a600, 0 14px 20px rgba(0,0,0,.12);
+  }
+
+  .letter-card.correct {
+    box-shadow: 0 8px 0 #15803d, 0 14px 20px rgba(0,0,0,.12);
+  }
+
+  .letter-card.wrong {
+    box-shadow: 0 8px 0 #dc2626, 0 14px 20px rgba(0,0,0,.12);
+  }
+
+  /* ---------- Result / Overlay ---------- */
+
+  .result-screen-inner {
+    padding:
+      calc(env(safe-area-inset-top, 0px) + 16px)
+      14px
+      calc(env(safe-area-inset-bottom, 0px) + 18px);
+  }
+
+  .result-panel {
+    width: 94vw;
+    border-radius: 30px;
+    padding: 26px 18px;
+  }
+
+  .result-title {
+    font-size: 1.8rem;
+  }
+
+  .result-stars {
+    font-size: 4rem;
+  }
+
+  .result-score {
+    font-size: 1.55rem;
+  }
+
+  .result-actions {
+    gap: 10px;
+  }
+
+  .primary-action,
+  .secondary-action {
+    width: min(78vw, 260px);
+    min-width: 0;
+    height: 54px;
+  }
+
+  .correct-card,
+  .wrong-card,
+  .loading-card {
+    width: min(90vw, 360px);
+  }
+
+  .correct-title,
+  .wrong-title {
+    font-size: 1.7rem;
+  }
+
+  /* ---------- Settings / Credit ---------- */
+
+  .settings-toggle {
+    width: 44px;
+    height: 44px;
+    top: calc(env(safe-area-inset-top, 0px) + 8px);
+    right: calc(env(safe-area-inset-right, 0px) + 8px);
+    border-radius: 15px;
+    font-size: 1.2rem;
+  }
+
+  .sound-settings-card {
+    top: calc(env(safe-area-inset-top, 0px) + 58px);
+    right: calc(env(safe-area-inset-right, 0px) + 8px);
+    width: min(260px, calc(100vw - 18px));
+    padding: 12px;
+    border-radius: 22px;
+  }
+
+  .app-credit {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 4px);
+    padding: 4px 9px;
+    font-size: .54rem;
+    max-width: 92vw;
+    opacity: .78;
+  }
+
+  .toast {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+    max-width: 88vw;
+    text-align: center;
+    font-size: .82rem;
+  }
+}
+
+/* จอเตี้ยมาก เช่นมือถือแนวนอน/จอเล็กมาก */
+@media (max-height: 720px) and (max-width: 900px) {
+  .level-logo {
+    width: min(46vw, 210px);
+    max-height: 92px;
+  }
+
+  .level-screen-inner {
+    gap: 7px;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
+  }
+
+  .level-panel {
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+  }
+
+  :root {
+    --mobile-level-pager-height: 160px;
+  }
+
+  .level-page-btn {
+    top: 80px !important;
+  }
+
+  .home-logo {
+    width: min(70vw, 280px);
+    max-height: 170px;
+  }
+
+  .game-panel {
+    padding: 10px 10px 12px !important;
+  }
+
+  .answer-zone {
+    height: 76px;
+    font-size: 2.75rem;
+  }
+
+  .letter-card {
+    min-height: 66px;
+    font-size: 2.35rem;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <main class="app" id="app">
+
+    <section class="screen active" id="startScreen">
+      <div class="home-screen-inner">
+        <div class="logo-wrap home-logo-wrap">
+          <img class="logo-img home-logo" src="assets/logo.png" alt="Word Quest Logo" />
+          <div class="fallback-logo">
+            <div class="word">Word</div>
+            <div class="quest">Quest</div>
+            <div class="thai">ภารกิจพิชิตคำ</div>
+          </div>
+        </div>
+
+        <button class="play-button" type="button" id="startBtn" style="display:none;">เริ่มเกม!</button>
+        <div class="home-load-status" id="homeLoadStatus" aria-label="กำลังโหลดข้อมูลด่าน">
+          <div class="home-load-text" id="homeLoadText"></div>
+          <div class="home-load-bar"><div class="home-load-bar-fill" id="homeLoadBarFill"></div></div>
+        </div>
+        <div class="home-hint">ฟังเสียง เลือกคำ พิชิตทุกด่าน</div>
+      </div>
+    </section>
+
+    <section class="screen" id="levelScreen">
+      <div class="level-screen-inner">
+        <div class="logo-wrap level-logo-wrap">
+          <img class="logo-img level-logo" src="assets/logo.png" alt="Word Quest Logo" />
+          <div class="fallback-logo small">
+            <div class="word">Word</div>
+            <div class="quest">Quest</div>
+            <div class="thai">ภารกิจพิชิตคำ</div>
+          </div>
+        </div>
+
+        <div class="level-panel">
+          <div class="level-head">
+            <h1 class="level-title">เลือกด่าน</h1>
+            <p class="level-subtitle">ผ่านด่านเพื่อสะสมดาว และปลดล็อกภารกิจถัดไป</p>
+          </div>
+
+          
+          <div class="level-pager" id="levelPager">
+<button class="level-page-btn level-page-prev" type="button" id="levelPrevBtn" aria-label="หน้าก่อนหน้า">
+  ❮
+</button>
+
+  <div class="level-map-viewport">
+    <div class="level-map" id="levelMap"></div>
+  </div>
+
+<button class="level-page-btn level-page-next" type="button" id="levelNextBtn" aria-label="หน้าถัดไป">
+  ❯
+</button>
+</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="gameScreen">
+      <div class="game-screen-inner">
+        <div class="game-topbar">
+          <div class="logo-wrap game-logo-wrap">
+            <img class="logo-img game-logo" src="assets/logo.png" alt="Word Quest Logo" />
+            <div class="fallback-logo mini">
+              <div class="word">Word</div>
+              <div class="quest">Quest</div>
+            </div>
+          </div>
+
+          <div class="hud-strip">
+            <div class="hud-pill"><div class="hud-label">ด่าน</div><div class="hud-value" id="hudLevel">-</div></div>
+            <div class="hud-pill"><div class="hud-label">ข้อ</div><div class="hud-value" id="hudQuestion">-</div></div>
+            <div class="hud-pill"><div class="hud-label">คะแนน</div><div class="hud-value" id="hudScore">0</div></div>
+            <div class="hud-pill"><div class="hud-label">ดาว</div><div class="hud-value" id="hudStars">☆☆☆</div></div>
+          </div>
+
+          <button class="small-btn" type="button" id="backLevelBtn">เลือกด่าน</button>
+        </div>
+
+        <div class="game-panel">
+          <h2 class="mission-title" id="missionTitle">ฟังเสียง แล้วเลือกคำตอบ</h2>
+          <p class="mission-subtitle" id="missionSubtitle">กดปุ่มฟังเสียง แล้วเลือกการ์ดที่ถูกต้อง</p>
+
+          <div class="sound-row">
+            <button class="sound-button" type="button" id="soundBtn">🔊 ฟังเสียง</button>
+          </div>
+
+<div class="answer-zone-wrap">
+  <div class="answer-zone" id="answerZone"><span class="placeholder">เลือกการ์ดคำตอบ</span></div>
+</div>
+
+<div class="submit-answer-row">
+  <button class="submit-answer-btn" type="button" id="submitAnswerBtn" disabled>
+    ส่งคำตอบ
+  </button>
+</div>
+
+<div class="letter-grid" id="letterGrid"></div>
+          <div class="feedback" id="feedback"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="resultScreen">
+      <div class="result-screen-inner">
+        <div class="result-panel">
+          <h2 class="result-title">สรุปผลภารกิจ</h2>
+          <div class="result-stars" id="resultStars">★★★</div>
+          <div class="result-score" id="resultScore">0 / 0</div>
+          <div id="resultMessage" class="mission-subtitle">เก่งมาก!</div>
+
+          <div class="result-actions">
+            <button class="primary-action" type="button" id="continueBtn">เลือกด่านต่อไป</button>
+            <button class="secondary-action" type="button" id="restartBtn">เล่นด่านนี้อีกครั้ง</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="app-credit" id="appCredit">
+  <span>Word Quest v1.0.0</span>
+  <span>© 2026 Pitchaya</span>
+  <span>Powered by Pitchaya</span>
+</div>
+
+
+<div class="toast" id="toast">พร้อมใช้งาน</div>
+<audio id="bgmAudio" src="assets/bgm.mp3" preload="auto" loop></audio>
+<audio id="clickSfxAudio" src="assets/CLICK3.WAV" preload="auto"></audio>
+<audio id="correctVoiceAudio" src="assets/kengmakka.mp3?v=1" preload="auto"></audio>
+<audio id="wrongVoiceAudio" src="assets/longeekkang.mp3?v=1" preload="auto"></audio>
+<button class="bgm-toggle" type="button" id="bgmToggleBtn" aria-label="เปิด/ปิดเพลง">🎵</button>
+
+  <div class="correct-overlay" id="correctOverlay" aria-hidden="true">
+  <div class="correct-card" role="dialog" aria-modal="true" aria-labelledby="correctTitle">
+    <div class="correct-badge">⭐</div>
+    <h2 class="correct-title" id="correctTitle">เก่งมากค่ะ!</h2>
+    <p class="correct-text" id="correctText">ตอบถูกต้อง</p>
+
+    <button class="correct-next-btn" type="button" id="correctNextBtn">
+      ข้อต่อไป
+    </button>
+  </div>
+</div>
+
+  <div class="wrong-overlay" id="wrongOverlay" aria-hidden="true">
+  <div class="wrong-card" role="dialog" aria-modal="true" aria-labelledby="wrongTitle">
+    <div class="wrong-badge">💪</div>
+    <h2 class="wrong-title" id="wrongTitle">ลองใหม่นะ</h2>
+    <p class="wrong-text" id="wrongText">ยังไม่ถูก ลองเลือกคำตอบอีกครั้ง</p>
+
+    <button class="wrong-retry-btn" type="button" id="retryQuestionBtn">
+      ลองอีกครั้ง
+    </button>
+  </div>
+</div>
+
+  <div class="loading-overlay" id="gameLoadingOverlay" aria-hidden="true">
+    <div class="loading-card" role="status" aria-live="polite">
+      <div class="loading-icon">🔊</div>
+      <div class="loading-title">กำลังโหลดข้อมูลเกม</div>
+      <div class="loading-text" id="loadingText">กำลังเตรียมข้อมูล...</div>
+      <div class="loading-bar"><div class="loading-bar-fill" id="loadingBarFill"></div></div>
+      <div class="loading-percent" id="loadingPercent">0%</div>
+    </div>
+  </div>
+
+  <script>
+// =========================================================
+// WORD QUEST CONFIG - GitHub เชื่อม Google Sheet + Google Drive ผ่าน Apps Script
+// =========================================================
+
+const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbykPnlgx_y0OfbLUbXNce0afd7e0tSOKYkTNB1-wZclZIDbNJIa74MerIKwT50ZTg/exec';
+
+const STORAGE_KEY = 'WORD_QUEST_PROGRESS_GITHUB_V1';
+const DEVICE_KEY = 'WORD_QUEST_DEVICE_ID';
+const BGM_SETTING_KEY = 'WORD_QUEST_BGM_ON';
+
+const LEVELS_PER_PAGE = 10;
+
+let levels = [];
+let questions = [];
+let currentLevelPage = 0;
+let currentLevel = null;
+let currentIndex = 0;
+let score = 0;
+let details = [];
+let isAnswering = false;
+let selectedChoice = '';
+let selectedButton = null;
+let currentAudio = null;
+let audioDataUrlCache = {};
+let audioLoadingMap = {};
+let levelsReady = false;
+let gameLoadingShownPercent = 0;
+let gameLoadingTargetPercent = 0;
+let gameLoadingAnimFrame = null;
+let gameLoadingAutoTimer = null;
+let bgmEnabled = localStorage.getItem(BGM_SETTING_KEY) !== 'off';
+const $ = (id) => document.getElementById(id);
+
+window.addEventListener('DOMContentLoaded', init);
+
+function init() {
+  setupLogoFallbacks();
+  getDeviceId();
+  bindEvents();
+  setupClickSfx();
+  updateBgmButton();
+  setHomeLoading(8, '', 'loading');
+  loadLevels();
+}
+
+function setupLogoFallbacks() {
+  document.querySelectorAll('.logo-wrap').forEach(wrap => {
+    const img = wrap.querySelector('img');
+    if (!img) return;
+    img.onerror = () => wrap.classList.add('logo-missing');
+  });
+}
+
+function bindEvents() {
+  $('startBtn').addEventListener('click', enterLevelScreen);
+  $('backLevelBtn').addEventListener('click', backToLevels);
+  $('soundBtn').addEventListener('click', playPromptSound);
+  $('continueBtn').addEventListener('click', backToLevels);
+  $('restartBtn').addEventListener('click', restartCurrentLevel);
+  $('bgmToggleBtn').addEventListener('click', toggleBgm);
+  $('correctNextBtn').addEventListener('click', goNextAfterCorrect);
+  $('submitAnswerBtn').addEventListener('click', submitAnswer);
+  $('retryQuestionBtn').addEventListener('click', retryCurrentQuestion);
+
+  $('levelPrevBtn').addEventListener('click', () => changeLevelPage(-1));
+  $('levelNextBtn').addEventListener('click', () => changeLevelPage(1));
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+  $(id).classList.add('active');
+}
+
+function startBgm() {
+  const bgm = $('bgmAudio');
+  if (!bgm || !bgmEnabled) return;
+
+  bgm.volume = 0.24;
+  bgm.loop = true;
+
+  bgm.play().catch(err => {
+    console.warn('BGM play blocked or failed:', err);
+  });
+}
+
+function setupClickSfx() {
+  document.addEventListener('click', function(event) {
+    const btn = event.target.closest('button');
+
+    if (!btn || btn.disabled) return;
+
+    // ปุ่มส่งคำตอบอาจตามด้วยเสียง "เก่งมากค่ะ"
+    // จึงไม่ให้ CLICK3.WAV แย่งเสียง
+    if (btn.id === 'submitAnswerBtn') return;
+
+    playClickSfx();
+  }, true);
+}
+
+function playClickSfx() {
+  const base = $('clickSfxAudio');
+  if (!base) return;
+
+  const sound = new Audio(base.currentSrc || base.src);
+  sound.volume = 0.45;
+  sound.currentTime = 0;
+
+  sound.play().catch(err => {
+    console.warn('click sound failed:', err);
+  });
+}
+
+let correctVoicePlayer = null;
+let wrongVoicePlayer = null;
+
+
+function playCorrectVoice() {
+  const voice = $('correctVoiceAudio');
+
+  duckBgmTemporarily(1800);
+
+  if (!voice) {
+    speakThai('เก่งมากค่ะ');
+    return;
+  }
+
+  const src = voice.currentSrc || voice.getAttribute('src') || voice.src;
+
+  if (!src) {
+    speakThai('เก่งมากค่ะ');
+    return;
+  }
+
+  try {
+    if (correctVoicePlayer) {
+      correctVoicePlayer.pause();
+      correctVoicePlayer.currentTime = 0;
+    }
+
+    correctVoicePlayer = new Audio(src);
+    correctVoicePlayer.volume = 1;
+    correctVoicePlayer.preload = 'auto';
+
+    correctVoicePlayer.addEventListener('error', () => {
+      console.warn('correct voice file error:', src);
+      toast('ไม่พบไฟล์เสียงเก่งมากค่ะ ตรวจชื่อไฟล์ใน assets');
+      speakThai('เก่งมากค่ะ');
+    }, { once: true });
+
+    const playPromise = correctVoicePlayer.play();
+
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(err => {
+        console.warn('correct voice failed:', err);
+        toast('เสียงเก่งมากค่ะยังเล่นไม่ได้');
+        speakThai('เก่งมากค่ะ');
+      });
+    }
+  } catch (err) {
+    console.warn('correct voice failed:', err);
+    speakThai('เก่งมากค่ะ');
+  }
+}
+
+    function playWrongVoice() {
+  const voice = $('wrongVoiceAudio');
+
+  duckBgmTemporarily(1600);
+
+  if (!voice) {
+    speakThai('ลองใหม่นะ');
+    return;
+  }
+
+  const src = voice.currentSrc || voice.getAttribute('src') || voice.src;
+
+  if (!src) {
+    speakThai('ลองใหม่นะ');
+    return;
+  }
+
+  try {
+    if (wrongVoicePlayer) {
+      wrongVoicePlayer.pause();
+      wrongVoicePlayer.currentTime = 0;
+    }
+
+    wrongVoicePlayer = new Audio(src);
+    wrongVoicePlayer.volume = 1;
+    wrongVoicePlayer.preload = 'auto';
+
+    wrongVoicePlayer.addEventListener('error', () => {
+      console.warn('wrong voice file error:', src);
+      toast('ไม่พบไฟล์เสียงลองใหม่นะ ตรวจชื่อไฟล์ใน assets');
+      speakThai('ลองใหม่นะ');
+    }, { once: true });
+
+    const playPromise = wrongVoicePlayer.play();
+
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(err => {
+        console.warn('wrong voice failed:', err);
+        toast('เสียงลองใหม่นะยังเล่นไม่ได้');
+        speakThai('ลองใหม่นะ');
+      });
+    }
+  } catch (err) {
+    console.warn('wrong voice failed:', err);
+    speakThai('ลองใหม่นะ');
+  }
+}
+
+function duckBgmTemporarily(duration = 1400) {
+  const bgm = $('bgmAudio');
+  if (!bgm || bgm.paused) return;
+
+  const normalVolume = Number.isFinite(bgm._normalVolume)
+    ? bgm._normalVolume
+    : (bgm.volume || 0.24);
+
+  bgm._normalVolume = normalVolume;
+  bgm.volume = Math.min(normalVolume, 0.08);
+
+  clearTimeout(bgm._duckTimer);
+  bgm._duckTimer = setTimeout(() => {
+    if (bgm && !bgm.paused) {
+      bgm.volume = bgm._normalVolume || 0.24;
+    }
+  }, duration);
+}
+
+function stopBgm() {
+  const bgm = $('bgmAudio');
+  if (!bgm) return;
+
+  bgm.pause();
+}
+
+function toggleBgm() {
+  bgmEnabled = !bgmEnabled;
+  localStorage.setItem(BGM_SETTING_KEY, bgmEnabled ? 'on' : 'off');
+
+  if (bgmEnabled) {
+    startBgm();
+  } else {
+    stopBgm();
+  }
+
+  updateBgmButton();
+}
+
+function updateBgmButton() {
+  const btn = $('bgmToggleBtn');
+  if (!btn) return;
+
+  btn.textContent = bgmEnabled ? '🎵' : '🔇';
+  btn.classList.toggle('off', !bgmEnabled);
+  btn.setAttribute('aria-label', bgmEnabled ? 'ปิดเพลงพื้นหลัง' : 'เปิดเพลงพื้นหลัง');
+}
+
+function enterLevelScreen() {
+  if (!levelsReady || !levels.length) {
+    toast('กำลังโหลดข้อมูลด่าน กรุณารอสักครู่');
+    return;
+  }
+
+  startBgm();
+
+  syncLevelPageToCurrentProgress();
+  showScreen('levelScreen');
+  renderLevels();
+}
+
+function backToLevels() {
+  stopAudio();
+
+  syncLevelPageToCurrentProgress();
+  showScreen('levelScreen');
+  renderLevels();
+}
+
+function toast(text) {
+  const el = $('toast');
+  el.textContent = text;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+function getDeviceId() {
+  let id = localStorage.getItem(DEVICE_KEY);
+  if (!id) {
+    id = 'device_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+    localStorage.setItem(DEVICE_KEY, id);
+  }
+  return id;
+}
+
+function getProgress() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { unlockedLevelNo: 1, starsByLevelId: {} };
+  } catch (err) {
+    return { unlockedLevelNo: 1, starsByLevelId: {} };
+  }
+}
+
+function saveProgress(progress) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+}
+
+async function loadLevels() {
+  levelsReady = false;
+  $('startBtn').disabled = true;
+  $('startBtn').style.display = 'none';
+
+  setLevelStatus('กำลังโหลด Level จริงจาก Google Sheet...');
+  setHomeLoading(18, '', 'loading');
+
+  try {
+    setHomeLoading(45, '', 'loading');
+levels = await apiGetLevels();
+
+syncLevelPageToCurrentProgress();
+renderLevels();
+
+levelsReady = true;
+
+    $('startBtn').disabled = false;
+    $('startBtn').textContent = 'เริ่มเกม!';
+
+    setHomeLoading(100, '', 'ready');
+  } catch (err) {
+    console.error(err);
+    levels = [];
+    levelsReady = false;
+
+    $('startBtn').disabled = true;
+    $('startBtn').style.display = 'none';
+
+    const message = 'โหลดข้อมูลด่านไม่สำเร็จ: ' + (err.message || err);
+    setLevelStatus(message);
+    setHomeLoading(100, message, 'error');
+  }
+}
+
+async function apiGetLevels() {
+  const rows = await gasJsonp('levels');
+
+  if (!Array.isArray(rows)) {
+    throw new Error(rows && rows.message ? rows.message : 'ข้อมูล Level ที่ได้กลับมาไม่ถูกต้อง');
+  }
+
+  return rows.map(level => ({
+    id: level.levelId,
+    level_no: Number(level.levelNo || 0),
+    level_name: level.levelName || '',
+    description: level.description || ''
+  })).sort((a, b) => Number(a.level_no) - Number(b.level_no));
+}
+
+async function apiGetQuestions(levelId) {
+  const rows = await gasJsonp('questions', {
+    levelId: levelId
+  });
+
+  return (rows || []).map(q => ({
+    id: q.questionId,
+    level_id: q.levelId,
+    prompt: q.prompt || '',
+    answer: q.answer || '',
+    choices: Array.isArray(q.choices)
+      ? q.choices
+      : String(q.choices || '').split(',').map(x => x.trim()).filter(Boolean),
+    audioFileId: q.audioFileId || '',
+    audio_url: ''
+  }));
+}
+
+
+async function apiGetAudios(fileIds) {
+  const ids = [...new Set(
+    (fileIds || [])
+      .map(id => String(id || '').trim())
+      .filter(Boolean)
+  )];
+
+  if (!ids.length) return {};
+
+  const res = await gasJsonp('audios', {
+    fileIds: ids.join(',')
+  });
+
+  if (res && res.audios && typeof res.audios === 'object') {
+    return res.audios;
+  }
+
+  throw new Error(res && res.message ? res.message : 'โหลดเสียงแบบชุดไม่สำเร็จ');
+}
+
+async function apiSaveResult(payload) {
+  const formData = new FormData();
+
+  formData.append('api', 'saveResult');
+  formData.append('payload', JSON.stringify({
+    deviceId: payload.device_id,
+    levelId: payload.level_id,
+    score: payload.score,
+    total: payload.total,
+    stars: payload.stars,
+    details: payload.details || []
+  }));
+
+  await fetch(GAS_API_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    body: formData
+  });
+
+  return { success: true };
+}
+
+function setHomeLoading(percent, text, state = 'loading') {
+  const status = $('homeLoadStatus');
+  const label = $('homeLoadText');
+  const fill = $('homeLoadBarFill');
+  const startBtn = $('startBtn');
+
+  if (!status || !label || !fill || !startBtn) return;
+
+  const value = Math.max(0, Math.min(100, Math.round(Number(percent || 0))));
+
+  status.classList.remove('ready', 'error');
+  fill.style.width = value + '%';
+
+  if (state === 'ready') {
+    status.style.display = 'none';
+    startBtn.style.display = 'inline-flex';
+    startBtn.disabled = false;
+    startBtn.textContent = 'เริ่มเกม!';
+    label.textContent = '';
+    return;
+  }
+
+  if (state === 'error') {
+    status.style.display = 'flex';
+    status.classList.add('error');
+    startBtn.style.display = 'none';
+    startBtn.disabled = true;
+    label.textContent = text || 'โหลดข้อมูลด่านไม่สำเร็จ';
+    return;
+  }
+
+  status.style.display = 'flex';
+  startBtn.style.display = 'none';
+  startBtn.disabled = true;
+  label.textContent = '';
+}
+
+function setLevelStatus(text) {
+  const el = $('levelStatus');
+  if (el) el.textContent = text;
+}
+
+function getMaxLevelPage() {
+  return Math.max(0, Math.ceil(levels.length / LEVELS_PER_PAGE) - 1);
+}
+
+function clampLevelPage(page) {
+  return Math.max(0, Math.min(Number(page || 0), getMaxLevelPage()));
+}
+
+function syncLevelPageToCurrentProgress() {
+  if (!levels.length) {
+    currentLevelPage = 0;
+    return;
+  }
+
+  const progress = getProgress();
+  const unlockedNo = Math.max(1, Number(progress.unlockedLevelNo || 1));
+  const maxLevelNo = Math.max(...levels.map(level => Number(level.level_no || 0)), 1);
+
+  const targetLevelNo = Math.min(unlockedNo, maxLevelNo);
+  const targetPage = Math.floor((targetLevelNo - 1) / LEVELS_PER_PAGE);
+
+  currentLevelPage = clampLevelPage(targetPage);
+}
+
+function changeLevelPage(direction) {
+  const maxPage = getMaxLevelPage();
+  const nextPage = currentLevelPage + direction;
+
+  if (nextPage < 0 || nextPage > maxPage) return;
+
+  currentLevelPage = nextPage;
+  renderLevels(direction > 0 ? 'next' : 'prev');
+}
+
+function updateLevelPagerButtons() {
+  const prevBtn = $('levelPrevBtn');
+  const nextBtn = $('levelNextBtn');
+
+  if (!prevBtn || !nextBtn) return;
+
+  const shouldShow = getMaxLevelPage() > 0;
+  const displayValue = shouldShow ? 'inline-flex' : 'none';
+
+  prevBtn.style.display = displayValue;
+  nextBtn.style.display = displayValue;
+
+  if (!shouldShow) return;
+
+  prevBtn.disabled = currentLevelPage <= 0;
+  nextBtn.disabled = currentLevelPage >= getMaxLevelPage();
+}
+
+function animateLevelMap(direction) {
+  if (!direction) return;
+
+  const map = $('levelMap');
+  if (!map) return;
+
+  map.classList.remove('slide-next', 'slide-prev');
+
+  // บังคับให้ browser เริ่ม animation ใหม่ทุกครั้ง
+  void map.offsetWidth;
+
+  map.classList.add(direction === 'next' ? 'slide-next' : 'slide-prev');
+}
+
+function renderLevels(direction = '') {
+  const map = $('levelMap');
+  if (!map) return;
+
+  map.innerHTML = '';
+
+  if (!levels.length) {
+    updateLevelPagerButtons();
+    return;
+  }
+
+  currentLevelPage = clampLevelPage(currentLevelPage);
+
+  const progress = getProgress();
+  const unlockedNo = Number(progress.unlockedLevelNo || 1);
+
+  const startIndex = currentLevelPage * LEVELS_PER_PAGE;
+  const pageLevels = levels.slice(startIndex, startIndex + LEVELS_PER_PAGE);
+
+  pageLevels.forEach(level => {
+    const levelNo = Number(level.level_no || 0);
+    const locked = levelNo > unlockedNo;
+    const stars = Number(progress.starsByLevelId[level.id] || 0);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'level-wrap';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'level-node' + (locked ? ' locked' : '');
+    btn.innerHTML = locked
+      ? `<div class="level-label-main">LEVEL</div><div class="level-number-main">${levelNo}</div><div class="level-lock">🔒</div>`
+      : `<div class="level-label-main">LEVEL</div><div class="level-number-main">${levelNo}</div><div class="level-stars">${renderStars(stars)}</div>`;
+
+    btn.addEventListener('click', () => {
+      if (locked) {
+        toast('ผ่านด่านก่อนหน้าเพื่อปลดล็อก');
+        return;
+      }
+
+      startLevel(level);
+    });
+
+    const name = document.createElement('div');
+    name.className = 'level-name';
+    name.textContent = level.level_name || ('Level ' + levelNo);
+
+    wrap.appendChild(btn);
+    wrap.appendChild(name);
+    map.appendChild(wrap);
+  });
+
+  updateLevelPagerButtons();
+  animateLevelMap(direction);
+}
+
+function renderStars(count) {
+  let html = '';
+  for (let i = 1; i <= 3; i++) {
+    html += `<span class="${i <= count ? 'star-on' : 'star-off'}">★</span>`;
+  }
+  return html;
+}
+
+async function startLevel(level) {
+  currentLevel = level;
+  currentIndex = 0;
+  score = 0;
+  details = [];
+
+  showScreen('gameScreen');
+  updateHud();
+  setFeedback('', '');
+  $('letterGrid').innerHTML = '';
+  $('answerZone').innerHTML = '<span class="placeholder">เลือกการ์ดคำตอบ</span>';
+
+  showGameLoading('กำลังโหลดข้อฝึก...', 10);
+
+  try {
+    questions = await apiGetQuestions(level.id);
+
+    if (!questions.length) {
+      hideGameLoading();
+      setFeedback('ยังไม่มีข้อฝึกในด่านนี้', 'bad');
+      return;
+    }
+
+    const audioIds = getAudioIdsFromQuestions(questions);
+    const firstAudioId = questions[0] && questions[0].audioFileId
+      ? String(questions[0].audioFileId).trim()
+      : '';
+
+    updateGameLoading(45, 'กำลังเตรียมเสียงข้อแรก...');
+
+    if (firstAudioId) {
+      await preloadAudioBatch([firstAudioId]);
+    }
+
+    renderQuestion();
+    updateGameLoading(100, 'พร้อมเล่นแล้ว!');
+    setTimeout(hideGameLoading, 220);
+
+    // โหลดเสียงข้อที่เหลือต่อแบบเงียบ ๆ หลังเข้าเกมแล้ว
+    const remainingAudioIds = audioIds.filter(id => id !== firstAudioId);
+    preloadRemainingAudiosInBackground(remainingAudioIds);
+  } catch (err) {
+    hideGameLoading();
+    setFeedback('โหลดข้อฝึกไม่สำเร็จ: ' + (err.message || err), 'bad');
+  }
+}
+
+function renderQuestion() {
+  isAnswering = false;
+  selectedChoice = '';
+  selectedButton = null;
+
+  const q = questions[currentIndex];
+
+  $('missionTitle').textContent = 'ฟังเสียง แล้วเลือกคำตอบ';
+  $('missionSubtitle').textContent = `ข้อที่ ${currentIndex + 1} จาก ${questions.length}`;
+  $('answerZone').innerHTML = '<span class="placeholder">เลือกการ์ดคำตอบ</span>';
+  setFeedback('', '');
+  setSubmitButtonState(false);
+
+  const choices = shuffle(Array.isArray(q.choices) ? q.choices.slice() : parseChoices(q.choices));
+  const grid = $('letterGrid');
+  grid.innerHTML = '';
+
+  choices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'letter-card';
+    btn.textContent = choice;
+
+    // กดการ์ด = เลือกคำตอบ ยังไม่ตรวจ
+    btn.addEventListener('click', () => selectAnswer(btn, choice));
+
+    grid.appendChild(btn);
+  });
+
+  updateHud();
+  preloadCurrentAudio();
+}
+
+function parseChoices(value) {
+  return String(value || '').split(',').map(x => x.trim()).filter(Boolean);
+}
+
+    function showCorrectOverlay() {
+  const overlay = $('correctOverlay');
+  const text = $('correctText');
+  const btn = $('correctNextBtn');
+
+  if (!overlay || !btn) return;
+
+  const isLastQuestion = currentIndex >= questions.length - 1;
+
+  if (text) {
+    text.textContent = isLastQuestion
+      ? 'ผ่านข้อสุดท้ายแล้ว ไปดูสรุปผลกันเลย'
+      : `ข้อที่ ${currentIndex + 1} ถูกต้อง`;
+  }
+
+  btn.textContent = isLastQuestion ? 'ดูสรุปผล' : 'ข้อต่อไป';
+
+  overlay.classList.add('show');
+  overlay.setAttribute('aria-hidden', 'false');
+
+  setTimeout(() => {
+    btn.focus();
+  }, 80);
+}
+
+    function showWrongOverlay() {
+  const overlay = $('wrongOverlay');
+  const btn = $('retryQuestionBtn');
+
+  if (!overlay || !btn) return;
+
+  overlay.classList.add('show');
+  overlay.setAttribute('aria-hidden', 'false');
+
+  setTimeout(() => {
+    btn.focus();
+  }, 80);
+}
+
+function hideWrongOverlay() {
+  const overlay = $('wrongOverlay');
+  if (!overlay) return;
+
+  overlay.classList.remove('show');
+  overlay.setAttribute('aria-hidden', 'true');
+}
+
+function retryCurrentQuestion() {
+  hideWrongOverlay();
+
+  isAnswering = false;
+  selectedChoice = '';
+  selectedButton = null;
+
+  $('answerZone').innerHTML = '<span class="placeholder">เลือกการ์ดคำตอบ</span>';
+  setFeedback('', '');
+  setSubmitButtonState(false);
+
+  document.querySelectorAll('.letter-card').forEach(btn => {
+    btn.disabled = false;
+    btn.classList.remove('selected', 'wrong', 'correct');
+  });
+}
+
+function hideCorrectOverlay() {
+  const overlay = $('correctOverlay');
+  if (!overlay) return;
+
+  overlay.classList.remove('show');
+  overlay.setAttribute('aria-hidden', 'true');
+}
+
+function goNextAfterCorrect() {
+  hideCorrectOverlay();
+
+  currentIndex += 1;
+
+  if (currentIndex >= questions.length) {
+    finishLevel();
+  } else {
+    renderQuestion();
+  }
+}
+
+function setSubmitButtonState(enabled) {
+  const btn = $('submitAnswerBtn');
+  if (!btn) return;
+
+  btn.disabled = !enabled;
+}
+
+function selectAnswer(button, choice) {
+  if (isAnswering) return;
+
+  selectedChoice = choice;
+  selectedButton = button;
+
+  document.querySelectorAll('.letter-card').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+
+  button.classList.add('selected');
+
+  $('answerZone').textContent = choice;
+  setFeedback('', '');
+  setSubmitButtonState(true);
+}
+
+function submitAnswer() {
+  if (isAnswering) return;
+
+  if (!selectedChoice || !selectedButton) {
+    toast('เลือกคำตอบก่อนนะ');
+    setSubmitButtonState(false);
+    return;
+  }
+
+  answerQuestion(selectedButton, selectedChoice);
+}
+
+function answerQuestion(button, choice) {
+  if (isAnswering) return;
+  isAnswering = true;
+  setSubmitButtonState(false);
+
+  document.querySelectorAll('.letter-card').forEach(btn => {
+    btn.disabled = true;
+  });
+
+  stopAudio();
+
+  const q = questions[currentIndex];
+  const correct = String(choice).trim() === String(q.answer).trim();
+
+  $('answerZone').textContent = choice;
+
+  if (correct) {
+    score += 1;
+    button.classList.add('correct');
+    setFeedback('ถูกต้อง เก่งมาก! ⭐', 'good');
+    playCorrectVoice();
+
+    details.push({
+      questionId: q.id || '',
+      prompt: q.prompt || '',
+      answer: q.answer || '',
+      selected: choice,
+      correct: true
+    });
+
+    updateHud();
+    showCorrectOverlay();
+    return;
+  }
+
+// ตอบผิด: ไม่เฉลย ไม่ข้ามข้อ ไม่บันทึกเป็นคำตอบสุดท้าย
+button.classList.add('wrong');
+setFeedback('', '');
+updateHud();
+playWrongVoice();
+showWrongOverlay();
+}
+
+function highlightCorrect(answer) {
+  document.querySelectorAll('.letter-card').forEach(btn => {
+    if (String(btn.textContent).trim() === String(answer).trim()) btn.classList.add('correct');
+  });
+}
+
+function updateHud() {
+  const total = questions.length || 0;
+  const stars = calculateStars(score, Math.max(total, 1));
+  $('hudLevel').textContent = currentLevel ? `Level ${currentLevel.level_no}` : '-';
+  $('hudQuestion').textContent = total ? `${Math.min(currentIndex + 1, total)} / ${total}` : '-';
+  $('hudScore').textContent = `${score}`;
+  $('hudStars').innerHTML = renderStars(stars);
+}
+
+function setFeedback(text, type) {
+  const el = $('feedback');
+  el.textContent = text;
+  el.className = 'feedback';
+  if (type === 'good') el.classList.add('good');
+  if (type === 'bad') el.classList.add('bad');
+}
+
+function getAudioIdsFromQuestions(list) {
+  return [...new Set(
+    (list || [])
+      .map(q => String(q.audioFileId || '').trim())
+      .filter(Boolean)
+  )];
+}
+
+function chunkArray(list, size) {
+  const chunks = [];
+  for (let i = 0; i < list.length; i += size) {
+    chunks.push(list.slice(i, i + size));
+  }
+  return chunks;
+}
+
+async function preloadAudioBatch(fileIds) {
+  const ids = [...new Set(
+    (fileIds || [])
+      .map(id => String(id || '').trim())
+      .filter(id => id && !audioDataUrlCache[id])
+  )];
+
+  if (!ids.length) return {};
+
+  try {
+    const audios = await apiGetAudios(ids);
+
+    Object.keys(audios || {}).forEach(fileId => {
+      if (audios[fileId]) {
+        audioDataUrlCache[fileId] = audios[fileId];
+      }
+    });
+
+    return audios || {};
+  } catch (err) {
+    // ถ้า api=audios ยังไม่ได้ Deploy หรือโหลดเป็นชุดไม่สำเร็จ ให้ถอยกลับไปโหลดทีละไฟล์
+    console.warn('batch audio failed, fallback to single audio:', err);
+
+    await Promise.all(ids.map(fileId => preloadAudioByFileId(fileId)));
+
+    const result = {};
+    ids.forEach(fileId => {
+      if (audioDataUrlCache[fileId]) result[fileId] = audioDataUrlCache[fileId];
+    });
+    return result;
+  }
+}
+
+async function preloadRemainingAudiosInBackground(fileIds) {
+  const ids = [...new Set(
+    (fileIds || [])
+      .map(id => String(id || '').trim())
+      .filter(id => id && !audioDataUrlCache[id])
+  )];
+
+  if (!ids.length) return;
+
+  const chunks = chunkArray(ids, 5);
+
+  for (const chunk of chunks) {
+    try {
+      await preloadAudioBatch(chunk);
+      console.log('โหลดเสียงพื้นหลังสำเร็จ:', chunk.length, 'ไฟล์');
+    } catch (err) {
+      console.warn('โหลดเสียงพื้นหลังไม่สำเร็จ:', err);
+    }
+
+    // เว้นจังหวะเล็กน้อย ลดโอกาส Apps Script หน่วงหรือโดนเรียกถี่เกินไป
+    await new Promise(resolve => setTimeout(resolve, 120));
+  }
+}
+
+function showGameLoading(text = 'กำลังโหลดข้อมูลเกม', percent = 0) {
+  const overlay = $('gameLoadingOverlay');
+  if (!overlay) return;
+
+  overlay.classList.add('show');
+  overlay.setAttribute('aria-hidden', 'false');
+
+  stopGameLoadingAuto();
+  cancelGameLoadingAnimation();
+  gameLoadingShownPercent = 0;
+  gameLoadingTargetPercent = 0;
+  setGameLoadingVisual(0);
+  startGameLoadingAuto(92);
+  updateGameLoading(percent, text);
+}
+
+function updateGameLoading(percent, text) {
+  const label = $('loadingText');
+
+  if (label && text) label.textContent = text;
+
+  const value = Math.max(0, Math.min(100, Number(percent || 0)));
+
+  if (value >= 100) {
+    stopGameLoadingAuto();
+    animateGameLoadingTo(100, 360);
+    return;
+  }
+
+  // กันเลขย้อนกลับ และทำให้เลขค่อย ๆ ไหลไปข้างหน้า
+  const nextTarget = Math.max(gameLoadingTargetPercent, value, gameLoadingShownPercent);
+  animateGameLoadingTo(nextTarget, 520);
+}
+
+function setGameLoadingVisual(value) {
+  const fill = $('loadingBarFill');
+  const percentLabel = $('loadingPercent');
+
+  const displayValue = Math.max(0, Math.min(100, Number(value || 0)));
+  gameLoadingShownPercent = displayValue;
+
+  if (fill) fill.style.width = displayValue.toFixed(1) + '%';
+  if (percentLabel) percentLabel.textContent = Math.round(displayValue) + '%';
+}
+
+function animateGameLoadingTo(target, duration = 520) {
+  target = Math.max(0, Math.min(100, Number(target || 0)));
+  target = Math.max(target, gameLoadingShownPercent);
+  gameLoadingTargetPercent = Math.max(gameLoadingTargetPercent, target);
+
+  cancelGameLoadingAnimation();
+
+  const startValue = gameLoadingShownPercent;
+  const endValue = gameLoadingTargetPercent;
+  const startTime = performance.now();
+
+  function tick(now) {
+    const progress = Math.min(1, (now - startTime) / duration);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = startValue + (endValue - startValue) * eased;
+
+    setGameLoadingVisual(current);
+
+    if (progress < 1) {
+      gameLoadingAnimFrame = requestAnimationFrame(tick);
+    } else {
+      gameLoadingAnimFrame = null;
+    }
+  }
+
+  gameLoadingAnimFrame = requestAnimationFrame(tick);
+}
+
+function startGameLoadingAuto(maxPercent = 92) {
+  stopGameLoadingAuto();
+
+  gameLoadingAutoTimer = setInterval(() => {
+    if (gameLoadingShownPercent >= maxPercent) return;
+
+    // ยิ่งใกล้ 92% ยิ่งช้าลง จะได้ไม่ชน 100% ก่อนโหลดจริงเสร็จ
+    const gap = maxPercent - gameLoadingShownPercent;
+    const step = Math.max(0.35, gap * 0.055);
+    const next = Math.min(maxPercent, gameLoadingShownPercent + step);
+
+    animateGameLoadingTo(next, 420);
+  }, 280);
+}
+
+function stopGameLoadingAuto() {
+  if (gameLoadingAutoTimer) {
+    clearInterval(gameLoadingAutoTimer);
+    gameLoadingAutoTimer = null;
+  }
+}
+
+function cancelGameLoadingAnimation() {
+  if (gameLoadingAnimFrame) {
+    cancelAnimationFrame(gameLoadingAnimFrame);
+    gameLoadingAnimFrame = null;
+  }
+}
+
+function hideGameLoading() {
+  const overlay = $('gameLoadingOverlay');
+  if (!overlay) return;
+
+  stopGameLoadingAuto();
+  cancelGameLoadingAnimation();
+  overlay.classList.remove('show');
+  overlay.setAttribute('aria-hidden', 'true');
+}
+
+
+async function preloadLevelAudiosWithProgress() {
+  const ids = [...new Set(
+    questions
+      .map(q => String(q.audioFileId || '').trim())
+      .filter(Boolean)
+  )];
+
+  if (!ids.length) {
+    updateGameLoading(100, 'ไม่มีไฟล์เสียงในด่านนี้ ใช้เสียงสังเคราะห์แทน');
+    return;
+  }
+
+  let done = 0;
+  const total = ids.length;
+
+  const updateProgress = () => {
+    const percent = 20 + (done / total) * 80;
+    updateGameLoading(percent, `กำลังโหลดเสียง ${done} / ${total}`);
+  };
+
+  updateProgress();
+
+  await Promise.all(ids.map(async fileId => {
+    if (audioDataUrlCache[fileId]) {
+      done += 1;
+      updateProgress();
+      return;
+    }
+
+    try {
+      const dataUrl = await preloadAudioByFileId(fileId);
+      if (!dataUrl) {
+        console.warn('โหลดเสียงไม่สำเร็จหรือไม่มีข้อมูลเสียง:', fileId);
+      }
+    } catch (err) {
+      console.warn('โหลดเสียงไม่สำเร็จ:', fileId, err);
+    } finally {
+      done += 1;
+      updateProgress();
+    }
+  }));
+}
+
+async function preloadAudioByFileId(fileId) {
+  fileId = String(fileId || '').trim();
+  if (!fileId) return '';
+
+  if (audioDataUrlCache[fileId]) {
+    return audioDataUrlCache[fileId];
+  }
+
+  if (audioLoadingMap[fileId]) {
+    return audioLoadingMap[fileId];
+  }
+
+  audioLoadingMap[fileId] = gasJsonp('audio', { fileId })
+    .then(res => {
+      if (res && res.audioDataUrl) {
+        audioDataUrlCache[fileId] = res.audioDataUrl;
+        return res.audioDataUrl;
+      }
+      throw new Error(res && res.message ? res.message : 'ไม่พบข้อมูลเสียง');
+    })
+    .catch(err => {
+      console.warn('preload audio failed', fileId, err);
+      return '';
+    })
+    .finally(() => {
+      delete audioLoadingMap[fileId];
+    });
+
+  return audioLoadingMap[fileId];
+}
+
+async function preloadCurrentAudio() {
+  const q = questions[currentIndex];
+  if (!q || !q.audioFileId) return '';
+  return preloadAudioByFileId(q.audioFileId);
+}
+
+async function playPromptSound() {
+  const q = questions[currentIndex];
+  if (!q) return;
+
+  stopAudio();
+
+  const fileId = String(q.audioFileId || '').trim();
+
+  if (fileId) {
+    let dataUrl = audioDataUrlCache[fileId];
+
+    if (!dataUrl) {
+      toast('กำลังเตรียมเสียง กดอีกครั้งเมื่อโหลดเสร็จ');
+      dataUrl = await preloadCurrentAudio();
+
+      // สำคัญ: หลัง await บาง browser จะไม่ยอมให้ play อัตโนมัติแล้ว
+      // จึงให้ผู้ใช้กดปุ่ม 🔊 อีกครั้งเพื่อเล่นเสียงที่โหลดเสร็จแล้ว
+      if (dataUrl) {
+        toast('เสียงพร้อมแล้ว กด 🔊 อีกครั้ง');
+      } else {
+        speakThai(q.prompt || q.answer || '');
+      }
+      return;
+    }
+
+    try {
+      currentAudio = new Audio(dataUrl);
+      currentAudio.volume = 1;
+      currentAudio.currentTime = 0;
+      await currentAudio.play();
+      return;
+    } catch (err) {
+      console.warn('audio play failed', err);
+      speakThai(q.prompt || q.answer || '');
+      return;
+    }
+  }
+
+  speakThai(q.prompt || q.answer || '');
+}
+
+function stopAudio() {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+}
+
+function speakThai(text) {
+  text = String(text || '').trim();
+  if (!text || !window.speechSynthesis) return;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'th-TH';
+  utter.rate = .8;
+  utter.pitch = 1;
+  window.speechSynthesis.speak(utter);
+}
+
+async function finishLevel() {
+  const total = questions.length;
+  const stars = calculateStars(score, total);
+
+  saveLevelProgress(currentLevel, stars);
+
+  $('resultStars').innerHTML = renderStars(stars);
+  $('resultScore').textContent = `${score} / ${total}`;
+  $('resultMessage').textContent = makeResultMessage(stars);
+  showScreen('resultScreen');
+
+  try {
+    await apiSaveResult({ device_id: getDeviceId(), level_id: currentLevel.id, score, total, stars, details });
+  } catch (err) {
+    console.warn('save result failed', err);
+  }
+}
+
+function calculateStars(score, total) {
+  if (!total) return 0;
+  const percent = score / total;
+  if (percent >= .85) return 3;
+  if (percent >= .60) return 2;
+  if (percent > 0) return 1;
+  return 0;
+}
+
+function makeResultMessage(stars) {
+  if (stars === 3) return 'ยอดเยี่ยมมาก ผ่านภารกิจแบบสมบูรณ์!';
+  if (stars === 2) return 'ดีมาก ผ่านด่านแล้ว ลองเล่นซ้ำเพื่อเก็บ 3 ดาวได้';
+  if (stars === 1) return 'ผ่านแล้ว พยายามต่ออีกนิดนะ';
+  return 'ลองใหม่อีกครั้ง คราวหน้าต้องดีขึ้นแน่นอน';
+}
+
+function saveLevelProgress(level, stars) {
+  const progress = getProgress();
+  const oldStars = Number(progress.starsByLevelId[level.id] || 0);
+  progress.starsByLevelId[level.id] = Math.max(oldStars, stars);
+
+  if (stars > 0) {
+    const nextLevelNo = Number(level.level_no || 0) + 1;
+    progress.unlockedLevelNo = Math.max(Number(progress.unlockedLevelNo || 1), nextLevelNo);
+  }
+
+  saveProgress(progress);
+}
+
+function restartCurrentLevel() {
+  if (currentLevel) startLevel(currentLevel);
+  else backToLevels();
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function gasJsonp(api, params = {}) {
+  return new Promise((resolve, reject) => {
+    const callbackName = 'gas_cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const script = document.createElement('script');
+
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error('เชื่อมต่อ Apps Script นานเกินไป'));
+    }, 15000);
+
+    function cleanup() {
+      clearTimeout(timer);
+      delete window[callbackName];
+      if (script.parentNode) script.remove();
+    }
+
+    window[callbackName] = function(data) {
+      cleanup();
+      resolve(data);
+    };
+
+    const url = new URL(GAS_API_URL);
+    url.searchParams.set('api', api);
+    url.searchParams.set('callback', callbackName);
+
+    Object.keys(params).forEach(key => {
+      url.searchParams.set(key, params[key]);
+    });
+
+    script.src = url.toString();
+    script.onerror = function() {
+      cleanup();
+      reject(new Error('โหลดข้อมูลจาก Apps Script ไม่สำเร็จ'));
+    };
+
+    document.body.appendChild(script);
+  });
+}
+
+
+// Register service worker for mobile/PWA repo
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => {
+      console.warn('Service worker register failed:', err);
+    });
+  });
+}
+
+  </script>
+</body>
+</html>
