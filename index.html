@@ -2019,195 +2019,24 @@ button {
     max-height: 300px;
   }
 }
+
+  
 /* =========================================================
-   FIX LEVEL SCREEN SHORT LANDSCAPE
-   แก้ปุ่มแถว 2 โดนเบียด / label หาย / ชิด copyright
+   FINAL FIX: iPhone 12 Landscape Level Screen
+   เป้าหมาย 844 x 390 CSS px
+   แก้ label แถว 2 ถูกตัด และไม่ให้ชน copyright
    ========================================================= */
 
-.level-panel {
-  position: relative;
-  z-index: 60;
+/* ใช้ได้ทั้งโครงสร้างที่มี/ไม่มี level-pager */
+#levelScreen.active .level-screen-inner,
+#levelScreen.active .level-panel,
+#levelScreen.active .level-pager,
+#levelScreen.active .level-map-viewport,
+#levelScreen.active .level-map,
+#levelScreen.active .level-wrap,
+#levelScreen.active .level-name {
+  overflow: visible !important;
 }
-
-.level-map {
-  overflow: visible;
-}
-
-.level-wrap,
-.level-name {
-  overflow: visible;
-}
-
-/* ให้ copyright อยู่หลัง card ตอนหน้าเลือกด่าน */
-.is-level-screen .app-credit {
-  z-index: 20;
-}
-
-/* จอแนวนอนที่สูงน้อย เช่น iPhone landscape / browser เตี้ย */
-@media (orientation: landscape) and (max-height: 520px) {
-  .level-screen-inner {
-    justify-content: flex-start;
-    gap: 4px;
-    padding:
-      calc(var(--app-safe-top) + 2px)
-      calc(var(--app-safe-right) + 8px)
-      calc(var(--app-safe-bottom) + 22px)
-      calc(var(--app-safe-left) + 8px);
-  }
-
-  .level-logo {
-    width: clamp(124px, 15vw, 168px);
-    max-height: 64px;
-  }
-
-  .level-panel {
-    width: min(560px, 66vw);
-    border-radius: 22px;
-    padding: 10px 16px 14px;
-    overflow: visible;
-  }
-
-  .level-head {
-    margin-bottom: 2px;
-  }
-
-  .level-title {
-    font-size: clamp(1.18rem, 2.5vw, 1.45rem);
-    line-height: 1;
-    margin-bottom: 2px;
-  }
-
-  .level-subtitle {
-    font-size: clamp(.58rem, 1.25vw, .76rem);
-    line-height: 1.12;
-  }
-
-  .level-map {
-    width: 100%;
-    max-width: 430px;
-    margin: 7px auto 0;
-    padding: 0 28px 0;
-    grid-template-columns: repeat(5, 64px);
-    gap: 10px 10px;
-    justify-content: center;
-    align-content: start;
-    overflow: visible;
-  }
-
-  .level-wrap {
-    width: 64px;
-    min-height: 86px;
-    gap: 3px;
-    overflow: visible;
-  }
-
-  .level-node {
-    width: 62px;
-    height: 62px;
-    border-radius: 13px;
-    padding: 4px 3px 3px;
-    box-shadow: 0 4px 0 #2f8bc9, 0 8px 14px rgba(35,149,221,.18);
-  }
-
-  .level-node.locked {
-    box-shadow: 0 4px 0 #858585, 0 8px 14px rgba(120,120,120,.14);
-  }
-
-  .level-node::before {
-    inset: 2px;
-    border-radius: 11px;
-    border-width: 1.5px;
-  }
-
-  .level-node::after {
-    inset: 5px 5px auto 5px;
-    height: 19px;
-    border-radius: 7px;
-  }
-
-  .level-label-main {
-    font-size: .45rem;
-  }
-
-  .level-number-main {
-    margin-top: 0;
-    font-size: 1.82rem;
-  }
-
-  .level-stars {
-    min-height: 14px;
-    font-size: 1.08rem;
-  }
-
-  .level-lock {
-    font-size: 1rem;
-  }
-
-  .level-name {
-    width: 76px;
-    min-height: 20px;
-    height: auto;
-    padding-bottom: 0;
-    font-size: .52rem;
-    line-height: 1.05;
-    overflow: visible;
-    white-space: normal;
-  }
-
-  .is-level-screen .app-credit {
-    bottom: calc(var(--app-safe-bottom) + 2px);
-    padding: 3px 9px;
-    font-size: .5rem;
-    opacity: .55;
-  }
-}
-
-/* จอเตี้ยมาก บีบเพิ่มอีกนิด */
-@media (orientation: landscape) and (max-height: 430px) {
-  .level-logo {
-    width: clamp(118px, 14vw, 158px);
-    max-height: 58px;
-  }
-
-  .level-panel {
-    width: min(540px, 66vw);
-    padding: 9px 14px 13px;
-  }
-
-  .level-map {
-    max-width: 410px;
-    grid-template-columns: repeat(5, 60px);
-    gap: 8px 9px;
-    padding-left: 25px;
-    padding-right: 25px;
-  }
-
-  .level-wrap {
-    width: 60px;
-    min-height: 82px;
-    gap: 2px;
-  }
-
-  .level-node {
-    width: 58px;
-    height: 58px;
-  }
-
-  .level-number-main {
-    font-size: 1.7rem;
-  }
-
-  .level-name {
-    width: 74px;
-    min-height: 20px;
-    font-size: .5rem;
-    line-height: 1.04;
-  }
-}
-/* =========================================================
-   REAL FIX: Level row 2 label clipped by viewport
-   วางท้ายสุดของ style เท่านั้น
-   ========================================================= */
 
 #levelScreen.active .level-screen-inner {
   position: relative !important;
@@ -2217,34 +2046,49 @@ button {
 #levelScreen.active .level-panel {
   position: relative !important;
   z-index: 1001 !important;
-  overflow: visible !important;
 }
 
-/* กัน copyright ทับหน้าเลือกด่าน */
-body:has(#levelScreen.active) .app-credit,
-.is-level-screen .app-credit {
-  z-index: 10 !important;
-  opacity: .55 !important;
-  bottom: calc(var(--app-safe-bottom) + 2px) !important;
-}
-
-/* จอแนวนอนเตี้ย เช่น iPhone 12 landscape / Chrome responsive 894x464 */
+/* หน้าเลือกด่านบนมือถือไม่ควรให้ copyright มากินพื้นที่แถวล่าง */
 @media (orientation: landscape) and (max-height: 520px) {
+  body.is-level-screen .app-credit,
+  body:has(#levelScreen.active) .app-credit {
+    display: none !important;
+  }
+}
+
+@media (max-width: 900px), (pointer: coarse) {
   #levelScreen.active .level-screen-inner {
+    width: 100% !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
     gap: 3px !important;
-    padding-top: calc(var(--app-safe-top) + 2px) !important;
-    padding-bottom: calc(var(--app-safe-bottom) + 16px) !important;
+    padding:
+      calc(var(--app-safe-top) + 2px)
+      calc(var(--app-safe-right) + 8px)
+      calc(var(--app-safe-bottom) + 6px)
+      calc(var(--app-safe-left) + 8px) !important;
+    overflow: hidden !important;
+  }
+
+  #levelScreen.active .level-logo-wrap {
+    flex: 0 0 auto !important;
   }
 
   #levelScreen.active .level-logo {
-    width: min(38vw, 160px) !important;
-    max-height: 64px !important;
+    width: min(34vw, 145px) !important;
+    max-height: 56px !important;
   }
 
   #levelScreen.active .level-panel {
-    width: min(540px, 64vw) !important;
-    padding: 9px 12px 16px !important;
+    width: min(540px, 72vw) !important;
+    max-width: 540px !important;
     border-radius: 22px !important;
+    padding: 8px 14px 18px !important;
+    background: radial-gradient(circle at 20% 0%, rgba(255,255,255,.62), transparent 38%), rgba(238,251,255,.66) !important;
   }
 
   #levelScreen.active .level-head {
@@ -2252,65 +2096,88 @@ body:has(#levelScreen.active) .app-credit,
   }
 
   #levelScreen.active .level-title {
+    margin: 0 0 2px !important;
     font-size: 1.32rem !important;
     line-height: 1 !important;
-    margin-bottom: 2px !important;
   }
 
   #levelScreen.active .level-subtitle {
+    margin: 0 !important;
     font-size: .63rem !important;
     line-height: 1.12 !important;
   }
 
-  /* จุดสำคัญ: เพิ่มความสูง parent ที่เคยตัด label แถวล่าง */
+  /* สำคัญ: ถ้ามี viewport ให้เลิกล็อกความสูง ไม่งั้นจะตัด label แถว 2 */
   #levelScreen.active .level-pager,
   #levelScreen.active .level-map-viewport {
-    height: 190px !important;
-    min-height: 190px !important;
-    max-height: 190px !important;
-    overflow: hidden !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
   }
 
   #levelScreen.active .level-map {
     width: max-content !important;
     max-width: 100% !important;
     margin: 6px auto 0 !important;
-    padding: 0 32px 12px !important;
-    grid-template-columns: repeat(5, 52px) !important;
-    gap: 8px 8px !important;
+    padding: 0 34px 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(5, 54px) !important;
+    gap: 8px 10px !important;
     justify-content: center !important;
     align-content: start !important;
     overflow: visible !important;
   }
 
   #levelScreen.active .level-wrap {
-    width: 52px !important;
+    width: 54px !important;
     min-height: 82px !important;
+    height: auto !important;
     gap: 3px !important;
     overflow: visible !important;
   }
 
   #levelScreen.active .level-node {
-    width: 52px !important;
-    height: 52px !important;
-    min-height: 52px !important;
+    width: 54px !important;
+    height: 54px !important;
+    min-height: 54px !important;
     border-radius: 12px !important;
     padding: 4px 3px 3px !important;
+    box-shadow: 0 4px 0 #2f8bc9, 0 8px 14px rgba(35,149,221,.18) !important;
+  }
+
+  #levelScreen.active .level-node.locked {
+    box-shadow: 0 4px 0 #858585, 0 8px 14px rgba(120,120,120,.14) !important;
+  }
+
+  #levelScreen.active .level-node::before {
+    inset: 2px !important;
+    border-radius: 10px !important;
+    border-width: 1.5px !important;
+  }
+
+  #levelScreen.active .level-node::after {
+    inset: 5px 5px auto 5px !important;
+    height: 18px !important;
+    border-radius: 7px !important;
   }
 
   #levelScreen.active .level-label-main {
     font-size: .42rem !important;
+    line-height: 1 !important;
   }
 
   #levelScreen.active .level-number-main {
     margin-top: 0 !important;
-    font-size: 1.55rem !important;
+    font-size: 1.58rem !important;
     line-height: 1 !important;
   }
 
   #levelScreen.active .level-stars {
     min-height: 13px !important;
     font-size: 1rem !important;
+    line-height: 1 !important;
   }
 
   #levelScreen.active .level-lock {
@@ -2318,51 +2185,73 @@ body:has(#levelScreen.active) .app-credit,
   }
 
   #levelScreen.active .level-name {
-    width: 76px !important;
-    min-height: 24px !important;
+    width: 78px !important;
+    min-height: 23px !important;
     height: auto !important;
     padding-bottom: 0 !important;
     font-size: .48rem !important;
-    line-height: 1.08 !important;
+    line-height: 1.07 !important;
     overflow: visible !important;
     white-space: normal !important;
     word-break: keep-all !important;
   }
 
   #levelScreen.active .level-page-btn {
-    top: 86px !important;
+    top: 84px !important;
   }
 }
 
-/* จอเตี้ยมากกว่าเดิม */
-@media (orientation: landscape) and (max-height: 430px) {
-  #levelScreen.active .level-pager,
-  #levelScreen.active .level-map-viewport {
-    height: 184px !important;
-    min-height: 184px !important;
-    max-height: 184px !important;
+/* iPhone 12 จริงในแนวนอน มักสูงประมาณ 390px */
+@media (orientation: landscape) and (max-width: 900px) and (max-height: 430px) {
+  #levelScreen.active .level-logo {
+    width: min(32vw, 136px) !important;
+    max-height: 52px !important;
   }
 
   #levelScreen.active .level-panel {
-    padding-bottom: 14px !important;
+    width: min(520px, 72vw) !important;
+    padding: 8px 13px 17px !important;
+  }
+
+  #levelScreen.active .level-title {
+    font-size: 1.24rem !important;
+  }
+
+  #levelScreen.active .level-subtitle {
+    font-size: .60rem !important;
   }
 
   #levelScreen.active .level-map {
     margin-top: 5px !important;
-    padding-bottom: 10px !important;
-    gap: 7px 8px !important;
+    grid-template-columns: repeat(5, 52px) !important;
+    gap: 7px 9px !important;
+    padding-left: 32px !important;
+    padding-right: 32px !important;
   }
 
   #levelScreen.active .level-wrap {
+    width: 52px !important;
     min-height: 80px !important;
   }
 
+  #levelScreen.active .level-node {
+    width: 52px !important;
+    height: 52px !important;
+    min-height: 52px !important;
+  }
+
+  #levelScreen.active .level-number-main {
+    font-size: 1.52rem !important;
+  }
+
   #levelScreen.active .level-name {
-    min-height: 23px !important;
+    width: 76px !important;
+    min-height: 22px !important;
     font-size: .46rem !important;
     line-height: 1.06 !important;
   }
 }
+
   </style>
 </head>
 <body>
