@@ -2278,6 +2278,439 @@ button { font-family: "Sarabun", sans-serif; }
   }
 }
 
+
+/* =========================================================
+   FINAL PATCH 2026-06-17
+   Level: label ใต้ปุ่ม / credit ไม่ทับ panel / ดาวไม่ล้น
+   Game : ฟังเสียง + ช่องคำตอบ + ส่งคำตอบ อยู่แถวเดียวกัน
+          ตัวเลือกคำตอบเป็นแถวเดียว 4 ปุ่ม
+   วางท้ายสุดเพื่อทับ CSS เก่าที่ซ้อนกันหลายก้อน
+   ========================================================= */
+
+/* ---------- Level screen ---------- */
+body[data-screen="levelScreen"] .level-screen-inner {
+  gap: 12px !important;
+  padding:
+    calc(env(safe-area-inset-top, 0px) + 16px)
+    14px
+    calc(env(safe-area-inset-bottom, 0px) + 48px) !important;
+}
+
+body[data-screen="levelScreen"] .level-logo {
+  width: clamp(230px, 16vw, 310px) !important;
+  max-height: 132px !important;
+}
+
+body[data-screen="levelScreen"] .level-panel {
+  width: min(920px, 78vw) !important;
+  padding: 18px 18px 12px !important;
+  border-radius: 28px !important;
+  overflow: visible !important;
+}
+
+body[data-screen="levelScreen"] .level-head {
+  margin-bottom: 6px !important;
+}
+
+body[data-screen="levelScreen"] .level-title {
+  font-size: 1.85rem !important;
+}
+
+body[data-screen="levelScreen"] .level-subtitle {
+  font-size: .88rem !important;
+}
+
+body[data-screen="levelScreen"] .level-pager,
+body[data-screen="levelScreen"] .level-map-viewport {
+  height: 270px !important;
+  min-height: 270px !important;
+  max-height: 270px !important;
+}
+
+body[data-screen="levelScreen"] .level-map {
+  margin: 6px auto 0 !important;
+  grid-template-columns: repeat(5, 88px) !important;
+  gap: 18px 15px !important;
+  padding-left: 60px !important;
+  padding-right: 60px !important;
+  align-content: start !important;
+}
+
+body[data-screen="levelScreen"] .level-wrap {
+  gap: 8px !important;
+}
+
+body[data-screen="levelScreen"] .level-name {
+  min-height: 30px !important;
+  height: auto !important;
+  overflow: visible !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  font-size: .72rem !important;
+  line-height: 1.12 !important;
+}
+
+/* ดาวลดขนาด ไม่ให้ล้นปุ่ม */
+body[data-screen="levelScreen"] .level-stars {
+  min-height: 16px !important;
+  max-width: 76px !important;
+  overflow: hidden !important;
+  font-size: 1.16rem !important;
+  line-height: 1 !important;
+  letter-spacing: -2px !important;
+}
+
+/* กุญแจยอมให้ล้นได้ */
+body[data-screen="levelScreen"] .level-node.locked {
+  overflow: visible !important;
+}
+
+body[data-screen="levelScreen"] .level-lock {
+  font-size: 1.55rem !important;
+  transform: translateY(5px) !important;
+  filter: drop-shadow(0 2px 2px rgba(15, 23, 42, .20));
+}
+
+body[data-screen="levelScreen"] .level-page-btn {
+  top: 132px !important;
+}
+
+body[data-screen="levelScreen"] .app-credit,
+body[data-screen="startScreen"] .app-credit {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 8px) !important;
+}
+
+/* หน้าเล่นเกมพื้นที่น้อย ซ่อน credit เพื่อไม่ให้ทับปุ่ม */
+body[data-screen="gameScreen"] .app-credit,
+body[data-screen="resultScreen"] .app-credit {
+  display: none !important;
+}
+
+/* ---------- Game screen ---------- */
+body[data-screen="gameScreen"] .game-topbar {
+  width: min(1180px, 96vw) !important;
+}
+
+body[data-screen="gameScreen"] .game-panel {
+  width: min(1180px, 96vw) !important;
+  padding: 20px 24px 22px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  overflow: hidden !important;
+}
+
+body[data-screen="gameScreen"] .mission-title {
+  font-size: clamp(1.45rem, 2vw, 1.9rem) !important;
+  margin: 0 !important;
+}
+
+body[data-screen="gameScreen"] .mission-subtitle {
+  margin: 0 auto 4px !important;
+  font-size: .95rem !important;
+  line-height: 1.25 !important;
+}
+
+.game-action-row {
+  width: min(940px, 100%);
+  margin: 0 auto 12px;
+  display: grid;
+  grid-template-columns: minmax(160px, .9fr) minmax(260px, 1fr) minmax(160px, .9fr);
+  align-items: center;
+  gap: 16px;
+}
+
+.game-action-row .sound-row,
+.game-action-row .answer-zone-wrap,
+.game-action-row .submit-answer-row {
+  margin: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.game-action-row .sound-button,
+.game-action-row .submit-answer-btn {
+  width: 100% !important;
+  max-width: 220px !important;
+  min-width: 0 !important;
+  height: 56px !important;
+  border-radius: 21px !important;
+  font-size: 1.08rem !important;
+  white-space: nowrap !important;
+}
+
+.game-action-row .answer-zone {
+  width: 100% !important;
+  max-width: 280px !important;
+  height: 76px !important;
+  border-width: 4px !important;
+  border-radius: 24px !important;
+  padding: 8px 12px !important;
+  font-size: 2.65rem !important;
+  box-shadow: inset 0 0 0 6px rgba(219,234,254,.62) !important;
+}
+
+.game-action-row .answer-zone .placeholder {
+  font-size: .86rem !important;
+  line-height: 1.15 !important;
+}
+
+body[data-screen="gameScreen"] .letter-grid {
+  width: min(980px, 100%) !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+body[data-screen="gameScreen"] .letter-card {
+  min-height: 72px !important;
+  border-radius: 20px !important;
+  font-size: 2.35rem !important;
+  box-shadow: 0 8px 0 #d9a600, 0 14px 20px rgba(0,0,0,.12) !important;
+}
+
+body[data-screen="gameScreen"] .letter-card.correct {
+  box-shadow: 0 8px 0 #15803d, 0 14px 20px rgba(0,0,0,.12) !important;
+}
+
+body[data-screen="gameScreen"] .letter-card.wrong {
+  box-shadow: 0 8px 0 #dc2626, 0 14px 20px rgba(0,0,0,.12) !important;
+}
+
+/* ---------- Mobile / touch landscape ---------- */
+@media (max-width: 900px), (pointer: coarse) {
+  body[data-screen="levelScreen"] .level-screen-inner {
+    gap: 7px !important;
+    padding:
+      calc(env(safe-area-inset-top, 0px) + 8px)
+      10px
+      calc(env(safe-area-inset-bottom, 0px) + 34px) !important;
+  }
+
+  body[data-screen="levelScreen"] .level-logo {
+    width: min(46vw, 210px) !important;
+    max-height: 86px !important;
+  }
+
+  body[data-screen="levelScreen"] .level-panel {
+    width: min(94vw, 430px) !important;
+    padding: 12px 10px 10px !important;
+    border-radius: 23px !important;
+  }
+
+  body[data-screen="levelScreen"] .level-title {
+    font-size: 1.34rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  body[data-screen="levelScreen"] .level-subtitle {
+    font-size: .66rem !important;
+    line-height: 1.18 !important;
+  }
+
+  body[data-screen="levelScreen"] .level-pager,
+  body[data-screen="levelScreen"] .level-map-viewport {
+    height: 180px !important;
+    min-height: 180px !important;
+    max-height: 180px !important;
+  }
+
+  body[data-screen="levelScreen"] .level-map {
+    grid-template-columns: repeat(5, 52px) !important;
+    gap: 10px 7px !important;
+    margin: 6px auto 0 !important;
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+  }
+
+  body[data-screen="levelScreen"] .level-wrap {
+    width: 52px !important;
+    gap: 7px !important;
+  }
+
+  body[data-screen="levelScreen"] .level-node {
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 12px !important;
+    padding: 4px 3px 3px !important;
+  }
+
+  body[data-screen="levelScreen"] .level-label-main {
+    font-size: .38rem !important;
+  }
+
+  body[data-screen="levelScreen"] .level-number-main {
+    font-size: 1.5rem !important;
+  }
+
+  body[data-screen="levelScreen"] .level-stars {
+    min-height: 11px !important;
+    max-width: 44px !important;
+    font-size: .72rem !important;
+    letter-spacing: -1px !important;
+  }
+
+  body[data-screen="levelScreen"] .level-lock {
+    font-size: .98rem !important;
+    transform: translateY(4px) !important;
+  }
+
+  body[data-screen="levelScreen"] .level-name {
+    width: 52px !important;
+    min-height: 25px !important;
+    font-size: .50rem !important;
+    line-height: 1.08 !important;
+  }
+
+  body[data-screen="levelScreen"] .level-page-btn {
+    top: 88px !important;
+  }
+
+  body[data-screen="gameScreen"] .game-screen-inner {
+    padding:
+      calc(env(safe-area-inset-top, 0px) + 6px)
+      10px
+      calc(env(safe-area-inset-bottom, 0px) + 8px) !important;
+    gap: 6px !important;
+  }
+
+  body[data-screen="gameScreen"] .game-topbar {
+    width: 100% !important;
+    padding: 6px 8px !important;
+    border-radius: 18px !important;
+  }
+
+  body[data-screen="gameScreen"] .hud-strip {
+    gap: 5px !important;
+  }
+
+  body[data-screen="gameScreen"] .hud-pill {
+    min-height: 40px !important;
+    border-radius: 13px !important;
+    padding: 5px 6px !important;
+  }
+
+  body[data-screen="gameScreen"] .hud-label {
+    font-size: .52rem !important;
+  }
+
+  body[data-screen="gameScreen"] .hud-value {
+    font-size: .80rem !important;
+  }
+
+  body[data-screen="gameScreen"] .small-btn {
+    min-height: 38px !important;
+    padding: 6px 8px !important;
+    font-size: .68rem !important;
+  }
+
+  body[data-screen="gameScreen"] .game-panel {
+    width: 100% !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    padding: 11px 10px 12px !important;
+    border-radius: 23px !important;
+    gap: 6px !important;
+  }
+
+  body[data-screen="gameScreen"] .mission-title {
+    font-size: 1.16rem !important;
+    line-height: 1.12 !important;
+  }
+
+  body[data-screen="gameScreen"] .mission-subtitle {
+    font-size: .66rem !important;
+    margin: 0 auto 2px !important;
+  }
+
+  .game-action-row {
+    width: 100% !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr) !important;
+    gap: 7px !important;
+    margin: 0 auto 8px !important;
+  }
+
+  .game-action-row .sound-button,
+  .game-action-row .submit-answer-btn {
+    max-width: none !important;
+    height: 42px !important;
+    border-radius: 15px !important;
+    font-size: .74rem !important;
+    padding: 0 6px !important;
+    box-shadow: 0 5px 0 rgba(21, 128, 61, .70), 0 9px 14px rgba(15,23,42,.12) !important;
+  }
+
+  .game-action-row .sound-button {
+    box-shadow: 0 5px 0 rgba(37, 99, 235, .55), 0 9px 14px rgba(15,23,42,.12) !important;
+  }
+
+  .game-action-row .answer-zone {
+    max-width: none !important;
+    height: 48px !important;
+    border-width: 3px !important;
+    border-radius: 16px !important;
+    padding: 5px 6px !important;
+    font-size: 1.78rem !important;
+    box-shadow: inset 0 0 0 4px rgba(219,234,254,.58) !important;
+  }
+
+  .game-action-row .answer-zone .placeholder {
+    font-size: .58rem !important;
+    line-height: 1.08 !important;
+  }
+
+  body[data-screen="gameScreen"] .letter-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+    margin-top: 0 !important;
+  }
+
+  body[data-screen="gameScreen"] .letter-card {
+    min-height: 48px !important;
+    border-radius: 15px !important;
+    font-size: 1.72rem !important;
+    box-shadow: 0 5px 0 #d9a600, 0 9px 14px rgba(0,0,0,.11) !important;
+  }
+
+  body[data-screen="gameScreen"] .letter-card.correct {
+    box-shadow: 0 5px 0 #15803d, 0 9px 14px rgba(0,0,0,.11) !important;
+  }
+
+  body[data-screen="gameScreen"] .letter-card.wrong {
+    box-shadow: 0 5px 0 #dc2626, 0 9px 14px rgba(0,0,0,.11) !important;
+  }
+}
+
+@media (max-height: 380px) and (max-width: 900px) {
+  body[data-screen="gameScreen"] .mission-title {
+    font-size: 1.04rem !important;
+  }
+
+  body[data-screen="gameScreen"] .mission-subtitle {
+    display: none !important;
+  }
+
+  .game-action-row .sound-button,
+  .game-action-row .submit-answer-btn {
+    height: 38px !important;
+    font-size: .68rem !important;
+  }
+
+  .game-action-row .answer-zone {
+    height: 42px !important;
+    font-size: 1.55rem !important;
+  }
+
+  body[data-screen="gameScreen"] .letter-card {
+    min-height: 42px !important;
+    font-size: 1.55rem !important;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -2363,21 +2796,23 @@ button { font-family: "Sarabun", sans-serif; }
           <h2 class="mission-title" id="missionTitle">ฟังเสียง แล้วเลือกคำตอบ</h2>
           <p class="mission-subtitle" id="missionSubtitle">กดปุ่มฟังเสียง แล้วเลือกการ์ดที่ถูกต้อง</p>
 
-          <div class="sound-row">
-            <button class="sound-button" type="button" id="soundBtn">🔊 ฟังเสียง</button>
+          <div class="game-action-row">
+            <div class="sound-row">
+              <button class="sound-button" type="button" id="soundBtn">🔊 ฟังเสียง</button>
+            </div>
+
+            <div class="answer-zone-wrap">
+              <div class="answer-zone" id="answerZone"><span class="placeholder">เลือกการ์ดคำตอบ</span></div>
+            </div>
+
+            <div class="submit-answer-row">
+              <button class="submit-answer-btn" type="button" id="submitAnswerBtn" disabled>
+                ส่งคำตอบ
+              </button>
+            </div>
           </div>
 
-<div class="answer-zone-wrap">
-  <div class="answer-zone" id="answerZone"><span class="placeholder">เลือกการ์ดคำตอบ</span></div>
-</div>
-
-<div class="submit-answer-row">
-  <button class="submit-answer-btn" type="button" id="submitAnswerBtn" disabled>
-    ส่งคำตอบ
-  </button>
-</div>
-
-<div class="letter-grid" id="letterGrid"></div>
+          <div class="letter-grid" id="letterGrid"></div>
           <div class="feedback" id="feedback"></div>
         </div>
       </div>
@@ -2494,6 +2929,7 @@ const $ = (id) => document.getElementById(id);
 window.addEventListener('DOMContentLoaded', init);
 
 function init() {
+  document.body.dataset.screen = 'startScreen';
   setupLogoFallbacks();
   getDeviceId();
   bindEvents();
@@ -2539,6 +2975,7 @@ function bindEvents() {
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
   $(id).classList.add('active');
+  document.body.dataset.screen = id;
 }
 
 function startBgm() {
