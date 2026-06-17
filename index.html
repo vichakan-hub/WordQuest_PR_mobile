@@ -2019,6 +2019,191 @@ button {
     max-height: 300px;
   }
 }
+/* =========================================================
+   FIX LEVEL SCREEN SHORT LANDSCAPE
+   แก้ปุ่มแถว 2 โดนเบียด / label หาย / ชิด copyright
+   ========================================================= */
+
+.level-panel {
+  position: relative;
+  z-index: 60;
+}
+
+.level-map {
+  overflow: visible;
+}
+
+.level-wrap,
+.level-name {
+  overflow: visible;
+}
+
+/* ให้ copyright อยู่หลัง card ตอนหน้าเลือกด่าน */
+.is-level-screen .app-credit {
+  z-index: 20;
+}
+
+/* จอแนวนอนที่สูงน้อย เช่น iPhone landscape / browser เตี้ย */
+@media (orientation: landscape) and (max-height: 520px) {
+  .level-screen-inner {
+    justify-content: flex-start;
+    gap: 4px;
+    padding:
+      calc(var(--app-safe-top) + 2px)
+      calc(var(--app-safe-right) + 8px)
+      calc(var(--app-safe-bottom) + 22px)
+      calc(var(--app-safe-left) + 8px);
+  }
+
+  .level-logo {
+    width: clamp(124px, 15vw, 168px);
+    max-height: 64px;
+  }
+
+  .level-panel {
+    width: min(560px, 66vw);
+    border-radius: 22px;
+    padding: 10px 16px 14px;
+    overflow: visible;
+  }
+
+  .level-head {
+    margin-bottom: 2px;
+  }
+
+  .level-title {
+    font-size: clamp(1.18rem, 2.5vw, 1.45rem);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .level-subtitle {
+    font-size: clamp(.58rem, 1.25vw, .76rem);
+    line-height: 1.12;
+  }
+
+  .level-map {
+    width: 100%;
+    max-width: 430px;
+    margin: 7px auto 0;
+    padding: 0 28px 0;
+    grid-template-columns: repeat(5, 64px);
+    gap: 10px 10px;
+    justify-content: center;
+    align-content: start;
+    overflow: visible;
+  }
+
+  .level-wrap {
+    width: 64px;
+    min-height: 86px;
+    gap: 3px;
+    overflow: visible;
+  }
+
+  .level-node {
+    width: 62px;
+    height: 62px;
+    border-radius: 13px;
+    padding: 4px 3px 3px;
+    box-shadow: 0 4px 0 #2f8bc9, 0 8px 14px rgba(35,149,221,.18);
+  }
+
+  .level-node.locked {
+    box-shadow: 0 4px 0 #858585, 0 8px 14px rgba(120,120,120,.14);
+  }
+
+  .level-node::before {
+    inset: 2px;
+    border-radius: 11px;
+    border-width: 1.5px;
+  }
+
+  .level-node::after {
+    inset: 5px 5px auto 5px;
+    height: 19px;
+    border-radius: 7px;
+  }
+
+  .level-label-main {
+    font-size: .45rem;
+  }
+
+  .level-number-main {
+    margin-top: 0;
+    font-size: 1.82rem;
+  }
+
+  .level-stars {
+    min-height: 14px;
+    font-size: 1.08rem;
+  }
+
+  .level-lock {
+    font-size: 1rem;
+  }
+
+  .level-name {
+    width: 76px;
+    min-height: 20px;
+    height: auto;
+    padding-bottom: 0;
+    font-size: .52rem;
+    line-height: 1.05;
+    overflow: visible;
+    white-space: normal;
+  }
+
+  .is-level-screen .app-credit {
+    bottom: calc(var(--app-safe-bottom) + 2px);
+    padding: 3px 9px;
+    font-size: .5rem;
+    opacity: .55;
+  }
+}
+
+/* จอเตี้ยมาก บีบเพิ่มอีกนิด */
+@media (orientation: landscape) and (max-height: 430px) {
+  .level-logo {
+    width: clamp(118px, 14vw, 158px);
+    max-height: 58px;
+  }
+
+  .level-panel {
+    width: min(540px, 66vw);
+    padding: 9px 14px 13px;
+  }
+
+  .level-map {
+    max-width: 410px;
+    grid-template-columns: repeat(5, 60px);
+    gap: 8px 9px;
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+
+  .level-wrap {
+    width: 60px;
+    min-height: 82px;
+    gap: 2px;
+  }
+
+  .level-node {
+    width: 58px;
+    height: 58px;
+  }
+
+  .level-number-main {
+    font-size: 1.7rem;
+  }
+
+  .level-name {
+    width: 74px;
+    min-height: 20px;
+    font-size: .5rem;
+    line-height: 1.04;
+  }
+}
   </style>
 </head>
 <body>
@@ -2181,6 +2366,7 @@ const $ = (id) => document.getElementById(id);
 window.addEventListener('DOMContentLoaded', init);
 
 function init() {
+  showScreen('startScreen');
   setupLogoFallbacks();
   getDeviceId();
   bindEvents();
@@ -2210,6 +2396,18 @@ function bindEvents() {
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
   $(id).classList.add('active');
+
+  document.body.classList.remove(
+    'is-start-screen',
+    'is-level-screen',
+    'is-game-screen',
+    'is-result-screen'
+  );
+
+  if (id === 'startScreen') document.body.classList.add('is-start-screen');
+  if (id === 'levelScreen') document.body.classList.add('is-level-screen');
+  if (id === 'gameScreen') document.body.classList.add('is-game-screen');
+  if (id === 'resultScreen') document.body.classList.add('is-result-screen');
 }
 
 function startBgm() {
