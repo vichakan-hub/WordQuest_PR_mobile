@@ -2206,78 +2206,6 @@ button { font-family: "Sarabun", sans-serif; }
   }
 }
 
-    /* =========================================================
-   PATCH: Mobile Level Grid
-   1) ให้แถว 1 กับแถว 2 เข้าใกล้กัน
-   2) กัน label แถวล่างโดนตัด
-   ========================================================= */
-
-@media (max-width: 900px), (pointer: coarse) {
-  :root {
-    --mobile-level-gap-y: 6px;
-    --mobile-level-pager-height: 184px;
-  }
-
-  .level-pager {
-    height: var(--mobile-level-pager-height) !important;
-    min-height: var(--mobile-level-pager-height) !important;
-    max-height: var(--mobile-level-pager-height) !important;
-  }
-
-  .level-map-viewport {
-    height: var(--mobile-level-pager-height) !important;
-    min-height: var(--mobile-level-pager-height) !important;
-    max-height: var(--mobile-level-pager-height) !important;
-    overflow: hidden !important;
-  }
-
-  .level-map {
-    margin: 6px auto 0 !important;
-   gap: 15px 15px;!important;
-    align-content: start !important;
-  }
-
-  .level-wrap {
-    gap: 4px !important;
-  }
-
-  .level-name {
-    min-height: 26px !important;
-    height: auto !important;
-    overflow: visible !important;
-    padding-bottom: 2px !important;
-    font-size: .52rem !important;
-    line-height: 1.12 !important;
-  }
-
-  .level-page-btn {
-    top: 84px !important;
-  }
-}
-
-/* จอเตี้ยมาก ให้ยังไม่ตัด label */
-@media (max-height: 720px) and (max-width: 900px) {
-  :root {
-    --mobile-level-gap-y: 5px;
-    --mobile-level-pager-height: 178px;
-  }
-
-  .level-map {
-    margin-top: 5px !important;
-    gap: 5px 5px; !important;
-  }
-
-  .level-name {
-    min-height: 25px !important;
-    font-size: .5rem !important;
-    line-height: 1.1 !important;
-  }
-
-  .level-page-btn {
-    top: 82px !important;
-  }
-}
-
   </style>
 </head>
 <body>
@@ -3769,4 +3697,111 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
 
   </script>
 </body>
-</html>
+</html>/* =========================================================
+   PATCH: Mobile Level Grid FINAL FIX
+   แก้จริง:
+   1) ลดระยะระหว่างแถว 1 และแถว 2
+   2) กัน label แถวล่างโดนตัด
+   3) แก้ syntax gap ที่เขียนผิดจาก ;!important
+   ========================================================= */
+
+@media (max-width: 900px), (pointer: coarse) {
+  :root {
+    --mobile-level-node: 52px;
+    --mobile-level-gap-x: 7px;
+    --mobile-level-gap-y: 5px;
+    --mobile-level-pager-height: 202px;
+  }
+
+  .level-panel {
+    padding-bottom: 18px !important;
+    overflow: visible !important;
+  }
+
+  .level-pager {
+    width: 100% !important;
+    height: var(--mobile-level-pager-height) !important;
+    min-height: var(--mobile-level-pager-height) !important;
+    max-height: var(--mobile-level-pager-height) !important;
+    overflow: visible !important;
+  }
+
+  .level-map-viewport {
+    height: var(--mobile-level-pager-height) !important;
+    min-height: var(--mobile-level-pager-height) !important;
+    max-height: var(--mobile-level-pager-height) !important;
+    overflow: hidden !important;
+    padding-bottom: 10px !important;
+  }
+
+  .level-map {
+    grid-template-columns: repeat(5, var(--mobile-level-node)) !important;
+    gap: var(--mobile-level-gap-y) var(--mobile-level-gap-x) !important;
+    width: max-content !important;
+    max-width: 100% !important;
+    margin: 4px auto 0 !important;
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+    padding-bottom: 8px !important;
+    align-content: start !important;
+  }
+
+  .level-wrap {
+    width: var(--mobile-level-node) !important;
+    gap: 3px !important;
+    min-height: 82px !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .level-node {
+    width: var(--mobile-level-node) !important;
+    height: var(--mobile-level-node) !important;
+  }
+
+  .level-name {
+    width: calc(var(--mobile-level-node) + 16px) !important;
+    min-height: 30px !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding-bottom: 3px !important;
+    font-size: .5rem !important;
+    line-height: 1.12 !important;
+    white-space: normal !important;
+    word-break: keep-all !important;
+  }
+
+  .level-page-btn {
+    top: 82px !important;
+  }
+}
+
+/* จอเตี้ยหรือมือถือแนวนอน ให้ยังไม่ตัด label */
+@media (max-height: 720px) and (max-width: 900px), (max-height: 720px) and (pointer: coarse) {
+  :root {
+    --mobile-level-gap-y: 4px;
+    --mobile-level-pager-height: 196px;
+  }
+
+  .level-map {
+    margin-top: 3px !important;
+    gap: var(--mobile-level-gap-y) var(--mobile-level-gap-x) !important;
+  }
+
+  .level-wrap {
+    gap: 3px !important;
+    min-height: 80px !important;
+  }
+
+  .level-name {
+    min-height: 29px !important;
+    font-size: .49rem !important;
+    line-height: 1.1 !important;
+    padding-bottom: 4px !important;
+  }
+
+  .level-page-btn {
+    top: 80px !important;
+  }
+}
