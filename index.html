@@ -2155,6 +2155,57 @@ button { font-family: "Sarabun", sans-serif; }
   }
 }
 
+    .rotate-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(56,189,248,.28), transparent 34%),
+    rgba(15, 23, 42, .72);
+  backdrop-filter: blur(12px);
+}
+
+.rotate-card {
+  width: min(340px, 90vw);
+  border-radius: 30px;
+  padding: 28px 22px;
+  text-align: center;
+  background: rgba(255,255,255,.94);
+  border: 2px solid rgba(255,255,255,.82);
+  box-shadow: 0 24px 60px rgba(15,23,42,.28);
+  color: #18345f;
+}
+
+.rotate-icon {
+  font-size: 3.4rem;
+  margin-bottom: 10px;
+}
+
+.rotate-title {
+  font-size: 1.7rem;
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.rotate-text {
+  margin-top: 8px;
+  font-size: 1rem;
+  line-height: 1.35;
+  font-weight: 800;
+  color: #42627d;
+}
+
+/* มือถือแนวตั้ง ให้โชว์ overlay */
+@media (max-width: 900px) and (orientation: portrait) {
+  .rotate-overlay {
+    display: flex;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -2284,6 +2335,14 @@ button { font-family: "Sarabun", sans-serif; }
   <span>Powered by Pitchaya</span>
 </div>
 
+  <div class="rotate-overlay" id="rotateOverlay">
+  <div class="rotate-card">
+    <div class="rotate-icon">📱↔️</div>
+    <div class="rotate-title">กรุณาหมุนเครื่อง</div>
+    <div class="rotate-text">เกมนี้เหมาะสำหรับการเล่นในแนวนอน</div>
+  </div>
+</div>
+
 
 <div class="toast" id="toast">พร้อมใช้งาน</div>
 <audio id="bgmAudio" src="assets/bgm.mp3" preload="auto" loop></audio>
@@ -2378,6 +2437,16 @@ function setupLogoFallbacks() {
     if (!img) return;
     img.onerror = () => wrap.classList.add('logo-missing');
   });
+}
+
+    async function lockLandscapeIfPossible() {
+  try {
+    if (screen.orientation && screen.orientation.lock) {
+      await screen.orientation.lock('landscape');
+    }
+  } catch (err) {
+    console.warn('Landscape lock not available:', err);
+  }
 }
 
 function bindEvents() {
@@ -2593,6 +2662,7 @@ function enterLevelScreen() {
     return;
   }
 
+  lockLandscapeIfPossible();
   startBgm();
 
   syncLevelPageToCurrentProgress();
