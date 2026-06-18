@@ -2750,9 +2750,24 @@ body[data-screen="gameScreen"] .bgm-toggle {
 
 /* มือถือแนวนอน */
 @media (max-width: 900px), (pointer: coarse) {
+
   body[data-screen="gameScreen"] .game-topbar,
   body[data-screen="gameScreen"] .game-panel {
-    width: min(820px, 85vw) !important;
+    width: min(820px, 80vw) !important;
+  }
+
+  body[data-screen="gameScreen"] .mission-title {
+    font-size: 1.24rem !important;
+  }
+
+  body[data-screen="gameScreen"] .mission-subtitle {
+    display: none !important;
+    font-size: 1.00rem !important;
+  }
+  
+  body[data-screen="gameScreen"] .game-action-row  {
+  margin: 15px
+    
   }
 
   body[data-screen="gameScreen"] .game-action-row .sound-button,
@@ -2760,6 +2775,7 @@ body[data-screen="gameScreen"] .bgm-toggle {
     height: 100px !important;
     border-radius: 18px !important;
     font-size: 2.82rem !important;
+    
   }
 
   body[data-screen="gameScreen"] .game-action-row .answer-zone {
