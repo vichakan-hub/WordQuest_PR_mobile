@@ -3878,28 +3878,16 @@ async function preloadAudioBatch(fileIds) {
 
   if (!ids.length) return {};
 
-  try {
-    const audios = await apiGetAudios(ids);
+  await Promise.all(ids.map(fileId => preloadAudioByFileId(fileId)));
 
-    Object.keys(audios || {}).forEach(fileId => {
-      if (audios[fileId]) {
-        audioDataUrlCache[fileId] = audios[fileId];
-      }
-    });
+  const result = {};
+  ids.forEach(fileId => {
+    if (audioDataUrlCache[fileId]) {
+      result[fileId] = audioDataUrlCache[fileId];
+    }
+  });
 
-    return audios || {};
-  } catch (err) {
-    // ถ้า api=audios ยังไม่ได้ Deploy หรือโหลดเป็นชุดไม่สำเร็จ ให้ถอยกลับไปโหลดทีละไฟล์
-    console.warn('batch audio failed, fallback to single audio:', err);
-
-    await Promise.all(ids.map(fileId => preloadAudioByFileId(fileId)));
-
-    const result = {};
-    ids.forEach(fileId => {
-      if (audioDataUrlCache[fileId]) result[fileId] = audioDataUrlCache[fileId];
-    });
-    return result;
-  }
+  return result;
 }
 
 async function preloadRemainingAudiosInBackground(fileIds) {
