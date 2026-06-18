@@ -3065,7 +3065,7 @@ function startBgm() {
   const bgm = $('bgmAudio');
   if (!bgm || !bgmEnabled) return;
 
-  bgm.volume = 0.24;
+  bgm.volume = 0.14;
   bgm.loop = true;
 
   bgm.play().catch(err => {
@@ -3206,7 +3206,7 @@ function duckBgmTemporarily(duration = 1400) {
 
   const normalVolume = Number.isFinite(bgm._normalVolume)
     ? bgm._normalVolume
-    : (bgm.volume || 0.24);
+    : (bgm.volume || 0.14);
 
   bgm._normalVolume = normalVolume;
   bgm.volume = Math.min(normalVolume, 0.08);
@@ -3214,7 +3214,7 @@ function duckBgmTemporarily(duration = 1400) {
   clearTimeout(bgm._duckTimer);
   bgm._duckTimer = setTimeout(() => {
     if (bgm && !bgm.paused) {
-      bgm.volume = bgm._normalVolume || 0.24;
+      bgm.volume = bgm._normalVolume || 0.14;
     }
   }, duration);
 }
