@@ -104,7 +104,7 @@
   --mission-subtitle-size: .95rem;
   --game-action-width: min(940px, 100%);
   --game-action-margin: 0 auto 12px;
-  --game-action-padding: 0;
+  --game-action-padding: 0 auto ;
   --game-action-gap: 16px;
   --game-action-columns: minmax(160px, .9fr) minmax(260px, 1fr) minmax(160px, .9fr);
   --game-action-button-height: 64px;
@@ -709,6 +709,11 @@ button {
   margin: 0px auto;
 }
 
+
+.game-panel {
+  margin: 0px auto;
+}
+
 .game-topbar {
   display: grid;
   grid-template-columns: var(--game-topbar-columns);
@@ -720,6 +725,7 @@ button {
   border: 2px solid rgba(255, 255, 255, .62);
   box-shadow: 0 16px 38px rgba(15, 23, 42, .16);
   backdrop-filter: blur(12px);
+  margin-bottom: 10px ;
 
 
 }
@@ -1465,7 +1471,7 @@ body[data-screen="levelScreen"] .app-credit {
     --mission-subtitle-size: .78rem;
     --game-action-width: 100%;
     --game-action-margin: 10px auto 20px;
-    --game-action-padding: 0 12px;
+    --game-action-padding: 0 auto;
     --game-action-gap: 12px;
     --game-action-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
     --game-action-button-height: 100px;
