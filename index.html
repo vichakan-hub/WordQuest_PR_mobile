@@ -1693,6 +1693,10 @@ body[data-screen="levelScreen"] .app-credit {
     touch-action: manipulation;
   }
 
+  body[data-screen="levelScreen"] .app-credit {
+  --credit-bottom: calc(var(--safe-bottom) - 6px);
+}
+
   button {
     min-height: 44px;
   }
@@ -1874,6 +1878,9 @@ body[data-screen="levelScreen"] .app-credit {
     --letter-card-height: 60px;
     --letter-card-font: 1.55rem;
   }
+  body[data-screen="levelScreen"] .app-credit {
+  --credit-bottom: calc(var(--safe-bottom) - 6px);
+}
 }
 
 @media (max-width: 900px) and (orientation: portrait) {
