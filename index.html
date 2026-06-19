@@ -106,7 +106,7 @@
   --game-action-margin: 0 auto 12px;
   --game-action-padding: 0 auto ;
   --game-action-gap: 16px;
-  --game-action-columns: minmax(160px, .9fr) minmax(260px, 1fr) minmax(160px, .9fr);
+  --game-action-columns: minmax(160px, .8fr) minmax(260px, 1.4fr) minmax(160px, .8fr);
   --game-action-button-height: 64px;
   --game-action-button-font: 1.12rem;
   --game-action-button-radius: 22px;
@@ -1466,14 +1466,14 @@ body[data-screen="levelScreen"] .app-credit {
 
     --game-panel-padding: 15px 15px 20px;
     --game-panel-radius: 23px;
-    --mission-title-size: 1rem;
+    --mission-title-size: clamp(1.45rem, 2vw, 1.9rem);
     --mission-subtitle-display: block;
     --mission-subtitle-size: .78rem;
     --game-action-width: 100%;
     --game-action-margin: 0px auto 10px;
     --game-action-padding: 0 auto;
     --game-action-gap: 12px;
-    --game-action-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
+    --game-action-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1fr);
     --game-action-button-height: 100px;
     --game-action-button-font: 1.20rem;
     --game-action-button-radius: 18px;
@@ -1493,7 +1493,7 @@ body[data-screen="levelScreen"] .app-credit {
 
     --bgm-size: 42px;
     --bgm-radius: 15px;
-    --bgm-top: calc(var(--safe-top) + 4px);
+    --bgm-top: calc(var(--safe-top) + 10px);
     --bgm-right: calc(var(--safe-right) + 2px);
     --bgm-font: 1rem;
 
