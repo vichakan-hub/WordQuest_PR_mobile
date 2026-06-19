@@ -1053,7 +1053,7 @@ button {
    Fixed UI / overlays
    ========================================================= */
 
-.bgm-toggle {
+.settings-toggle {
   position: fixed;
   top: var(--bgm-top);
   right: var(--bgm-right);
@@ -1075,21 +1075,206 @@ button {
   transition: transform .14s ease, filter .14s ease, opacity .14s ease;
 }
 
-.bgm-toggle:hover {
-  transform: translateY(-2px);
+.settings-toggle:hover {
+  transform: translateY(-2px) rotate(8deg);
   filter: brightness(1.04);
 }
 
-.bgm-toggle:active {
-  transform: translateY(2px);
+.settings-toggle:active {
+  transform: translateY(2px) rotate(-4deg);
 }
 
-.bgm-toggle.off {
+.settings-toggle.off {
   opacity: .72;
   color: #7f1d1d;
   background: rgba(254, 226, 226, .92);
 }
 
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2600;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, .42);
+  backdrop-filter: blur(10px);
+}
+
+.settings-overlay.show {
+  display: flex;
+  animation: overlayFadeIn .18s ease both;
+}
+
+.settings-card {
+  width: min(430px, 92vw);
+  border-radius: 30px;
+  padding: 22px;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, .82), transparent 38%),
+    rgba(255, 255, 255, .96);
+  border: 2px solid rgba(255, 255, 255, .86);
+  box-shadow: 0 28px 70px rgba(15, 23, 42, .30);
+  color: var(--text);
+}
+
+.settings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.settings-head h2 {
+  margin: 0;
+  font-size: 1.55rem;
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.settings-close-btn {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #075985;
+  background: #e0f2fe;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, .10);
+}
+
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 22px;
+  background: rgba(224, 242, 254, .65);
+  border: 1px solid rgba(255, 255, 255, .78);
+}
+
+.setting-info {
+  min-width: 0;
+}
+
+.setting-name {
+  font-size: 1.04rem;
+  line-height: 1.15;
+  font-weight: 900;
+}
+
+.setting-desc {
+  margin-top: 4px;
+  font-size: .78rem;
+  line-height: 1.2;
+  font-weight: 800;
+  color: #42627d;
+}
+
+.setting-switch {
+  flex: 0 0 auto;
+  position: relative;
+  width: 58px;
+  height: 34px;
+  cursor: pointer;
+}
+
+.setting-switch input {
+  display: none;
+}
+
+.setting-switch span {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: #cbd5e1;
+  box-shadow: inset 0 2px 5px rgba(15, 23, 42, .18);
+  transition: .16s ease;
+}
+
+.setting-switch span::before {
+  content: "";
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  left: 3px;
+  top: 3px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, .22);
+  transition: .16s ease;
+}
+
+.setting-switch input:checked + span {
+  background: linear-gradient(135deg, #22c55e, #06b6d4);
+}
+
+.setting-switch input:checked + span::before {
+  transform: translateX(24px);
+}
+
+.setting-volume {
+  padding: 0 6px;
+}
+
+.setting-volume label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: .92rem;
+  line-height: 1.2;
+  font-weight: 900;
+  color: #315777;
+}
+
+.setting-volume strong {
+  color: #1d4ed8;
+}
+
+.setting-volume input[type="range"] {
+  width: 100%;
+  height: 32px;
+  accent-color: #0ea5e9;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .settings-card {
+    width: min(92vw, 390px);
+    border-radius: 26px;
+    padding: 18px;
+  }
+
+  .settings-head h2 {
+    font-size: 1.32rem;
+  }
+
+  .setting-row {
+    padding: 12px;
+    border-radius: 19px;
+  }
+
+  .setting-name {
+    font-size: .95rem;
+  }
+
+  .setting-desc {
+    font-size: .70rem;
+  }
+}
 body[data-screen="gameScreen"] .app-credit,
 body[data-screen="resultScreen"] .app-credit {
   display: none;
@@ -1842,7 +2027,58 @@ body[data-screen="levelScreen"] .app-credit {
 <audio id="clickSfxAudio" src="assets/CLICK3.WAV" preload="auto"></audio>
 <audio id="correctVoiceAudio" src="assets/kengmakka.mp3?v=1" preload="auto"></audio>
 <audio id="wrongVoiceAudio" src="assets/longeekkang.mp3?v=1" preload="auto"></audio>
-<button class="bgm-toggle" type="button" id="bgmToggleBtn" aria-label="เปิด/ปิดเพลง">🎵</button>
+<button class="settings-toggle" type="button" id="settingsBtn" aria-label="ตั้งค่าเสียง">⚙️</button>
+
+<div class="settings-overlay" id="settingsOverlay" aria-hidden="true">
+  <div class="settings-card" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="settings-head">
+      <h2 id="settingsTitle">ตั้งค่าเสียง</h2>
+      <button class="settings-close-btn" type="button" id="settingsCloseBtn" aria-label="ปิดหน้าตั้งค่า">✕</button>
+    </div>
+
+    <div class="settings-list">
+      <div class="setting-row">
+        <div class="setting-info">
+          <div class="setting-name">เพลงพื้นหลัง BGM</div>
+          <div class="setting-desc">เปิด/ปิดเพลงระหว่างเล่นเกม</div>
+        </div>
+
+        <label class="setting-switch">
+          <input type="checkbox" id="bgmSwitch">
+          <span></span>
+        </label>
+      </div>
+
+      <div class="setting-volume">
+        <label for="bgmVolumeRange">
+          ระดับเสียง BGM
+          <strong id="bgmVolumeValue">100%</strong>
+        </label>
+        <input type="range" id="bgmVolumeRange" min="0" max="100" step="1">
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <div class="setting-name">เสียงปุ่ม</div>
+          <div class="setting-desc">เสียงคลิกเมื่อกดปุ่มต่าง ๆ</div>
+        </div>
+
+        <label class="setting-switch">
+          <input type="checkbox" id="sfxSwitch">
+          <span></span>
+        </label>
+      </div>
+
+      <div class="setting-volume">
+        <label for="sfxVolumeRange">
+          ระดับเสียงปุ่ม
+          <strong id="sfxVolumeValue">45%</strong>
+        </label>
+        <input type="range" id="sfxVolumeRange" min="0" max="100" step="1">
+      </div>
+    </div>
+  </div>
+</div>
 
   <div class="correct-overlay" id="correctOverlay" aria-hidden="true">
   <div class="correct-card" role="dialog" aria-modal="true" aria-labelledby="correctTitle">
@@ -1887,11 +2123,17 @@ const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbykPnlgx_y0OfbLUbXN
 
 const STORAGE_KEY = 'WORD_QUEST_PROGRESS_GITHUB_V1';
 const DEVICE_KEY = 'WORD_QUEST_DEVICE_ID';
-const BGM_SETTING_KEY = 'WORD_QUEST_BGM_ON';
 
-const BGM_DESKTOP_VOLUME = 0.50;
-const BGM_IOS_VOLUME = 1;
-const BGM_DUCK_VOLUME = 0.025;
+const BGM_SETTING_KEY = 'WORD_QUEST_BGM_ON';
+const SFX_SETTING_KEY = 'WORD_QUEST_SFX_ON';
+const BGM_VOLUME_KEY = 'WORD_QUEST_BGM_VOLUME';
+const SFX_VOLUME_KEY = 'WORD_QUEST_SFX_VOLUME';
+
+const BGM_DESKTOP_VOLUME_DEFAULT = 0.10;
+const BGM_IOS_VOLUME_DEFAULT = 1;
+const SFX_VOLUME_DEFAULT = 0.45;
+const BGM_DUCK_RATIO = 0.35;
+const BGM_DUCK_MIN = 0.012;
 
 const LEVELS_PER_PAGE = 10;
 
@@ -1914,6 +2156,14 @@ let gameLoadingTargetPercent = 0;
 let gameLoadingAnimFrame = null;
 let gameLoadingAutoTimer = null;
 let bgmEnabled = localStorage.getItem(BGM_SETTING_KEY) !== 'off';
+let sfxEnabled = localStorage.getItem(SFX_SETTING_KEY) !== 'off';
+
+let bgmVolume = getStoredVolume(
+  BGM_VOLUME_KEY,
+  isIOSDevice() ? BGM_IOS_VOLUME_DEFAULT : BGM_DESKTOP_VOLUME_DEFAULT
+);
+
+let sfxVolume = getStoredVolume(SFX_VOLUME_KEY, SFX_VOLUME_DEFAULT);
 const $ = (id) => document.getElementById(id);
 
 window.addEventListener('DOMContentLoaded', init);
@@ -1940,6 +2190,22 @@ function setupBgmSourceByDevice() {
   }
 }
 
+function clampVolume(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return 0;
+  return Math.max(0, Math.min(1, n));
+}
+
+function getStoredVolume(key, fallback) {
+  const value = Number(localStorage.getItem(key));
+  if (!Number.isFinite(value)) return fallback;
+  return clampVolume(value);
+}
+
+function volumeToPercent(value) {
+  return Math.round(clampVolume(value) * 100);
+}
+
 function init() {
   document.body.dataset.screen = 'startScreen';
   setupLogoFallbacks();
@@ -1947,7 +2213,7 @@ function init() {
   bindEvents();
   setupClickSfx();
   setupBgmSourceByDevice();
-  updateBgmButton();
+  syncSettingsUI();
   setHomeLoading(8, '', 'loading');
   loadLevels();
 }
@@ -1976,7 +2242,30 @@ function bindEvents() {
   $('soundBtn').addEventListener('click', playPromptSound);
   $('continueBtn').addEventListener('click', backToLevels);
   $('restartBtn').addEventListener('click', restartCurrentLevel);
-  $('bgmToggleBtn').addEventListener('click', toggleBgm);
+ $('settingsBtn').addEventListener('click', openSettings);
+$('settingsCloseBtn').addEventListener('click', closeSettings);
+
+$('settingsOverlay').addEventListener('click', event => {
+  if (event.target.id === 'settingsOverlay') {
+    closeSettings();
+  }
+});
+
+$('bgmSwitch').addEventListener('change', event => {
+  setBgmEnabled(event.target.checked);
+});
+
+$('sfxSwitch').addEventListener('change', event => {
+  setSfxEnabled(event.target.checked);
+});
+
+$('bgmVolumeRange').addEventListener('input', event => {
+  setBgmVolume(Number(event.target.value) / 100);
+});
+
+$('sfxVolumeRange').addEventListener('input', event => {
+  setSfxVolume(Number(event.target.value) / 100);
+});
   $('correctNextBtn').addEventListener('click', goNextAfterCorrect);
   $('submitAnswerBtn').addEventListener('click', submitAnswer);
   $('retryQuestionBtn').addEventListener('click', retryCurrentQuestion);
@@ -1998,13 +2287,8 @@ function startBgm() {
   setupBgmSourceByDevice();
 
   bgm.loop = true;
-
-  const normalVolume = isIOSDevice()
-    ? BGM_IOS_VOLUME
-    : BGM_DESKTOP_VOLUME;
-
-  bgm._normalVolume = normalVolume;
-  bgm.volume = normalVolume;
+  bgm._normalVolume = bgmVolume;
+  bgm.volume = bgmVolume;
 
   bgm.play().catch(err => {
     console.warn('BGM play blocked or failed:', err);
@@ -2026,11 +2310,13 @@ function setupClickSfx() {
 }
 
 function playClickSfx() {
+  if (!sfxEnabled) return;
+
   const base = $('clickSfxAudio');
   if (!base) return;
 
   const sound = new Audio(base.currentSrc || base.src);
-  sound.volume = 0.45;
+  sound.volume = sfxVolume;
   sound.currentTime = 0;
 
   sound.play().catch(err => {
@@ -2142,21 +2428,19 @@ function duckBgmTemporarily(duration = 1400) {
   const bgm = $('bgmAudio');
   if (!bgm || bgm.paused) return;
 
-  const fallbackVolume = isIOSDevice()
-    ? BGM_IOS_VOLUME
-    : BGM_DESKTOP_VOLUME;
-
   const normalVolume = Number.isFinite(bgm._normalVolume)
     ? bgm._normalVolume
-    : fallbackVolume;
+    : bgmVolume;
+
+  const duckVolume = Math.max(BGM_DUCK_MIN, normalVolume * BGM_DUCK_RATIO);
 
   bgm._normalVolume = normalVolume;
-  bgm.volume = Math.min(normalVolume, BGM_DUCK_VOLUME);
+  bgm.volume = Math.min(normalVolume, duckVolume);
 
   clearTimeout(bgm._duckTimer);
   bgm._duckTimer = setTimeout(() => {
     if (bgm && !bgm.paused) {
-      bgm.volume = bgm._normalVolume || fallbackVolume;
+      bgm.volume = bgm._normalVolume || bgmVolume;
     }
   }, duration);
 }
@@ -2168,8 +2452,25 @@ function stopBgm() {
   bgm.pause();
 }
 
-function toggleBgm() {
-  bgmEnabled = !bgmEnabled;
+function openSettings() {
+  const overlay = $('settingsOverlay');
+  if (!overlay) return;
+
+  syncSettingsUI();
+  overlay.classList.add('show');
+  overlay.setAttribute('aria-hidden', 'false');
+}
+
+function closeSettings() {
+  const overlay = $('settingsOverlay');
+  if (!overlay) return;
+
+  overlay.classList.remove('show');
+  overlay.setAttribute('aria-hidden', 'true');
+}
+
+function setBgmEnabled(enabled) {
+  bgmEnabled = Boolean(enabled);
   localStorage.setItem(BGM_SETTING_KEY, bgmEnabled ? 'on' : 'off');
 
   if (bgmEnabled) {
@@ -2178,16 +2479,64 @@ function toggleBgm() {
     stopBgm();
   }
 
-  updateBgmButton();
+  syncSettingsUI();
+}
+
+function setSfxEnabled(enabled) {
+  sfxEnabled = Boolean(enabled);
+  localStorage.setItem(SFX_SETTING_KEY, sfxEnabled ? 'on' : 'off');
+  syncSettingsUI();
+}
+
+function setBgmVolume(value) {
+  bgmVolume = clampVolume(value);
+  localStorage.setItem(BGM_VOLUME_KEY, String(bgmVolume));
+
+  const bgm = $('bgmAudio');
+  if (bgm) {
+    bgm._normalVolume = bgmVolume;
+    bgm.volume = bgmVolume;
+  }
+
+  syncSettingsUI();
+}
+
+function setSfxVolume(value) {
+  sfxVolume = clampVolume(value);
+  localStorage.setItem(SFX_VOLUME_KEY, String(sfxVolume));
+  syncSettingsUI();
+}
+
+function syncSettingsUI() {
+  const settingsBtn = $('settingsBtn');
+  const bgmSwitch = $('bgmSwitch');
+  const sfxSwitch = $('sfxSwitch');
+  const bgmRange = $('bgmVolumeRange');
+  const sfxRange = $('sfxVolumeRange');
+  const bgmValue = $('bgmVolumeValue');
+  const sfxValue = $('sfxVolumeValue');
+
+  if (settingsBtn) {
+    settingsBtn.classList.toggle('off', !bgmEnabled && !sfxEnabled);
+  }
+
+  if (bgmSwitch) bgmSwitch.checked = bgmEnabled;
+  if (sfxSwitch) sfxSwitch.checked = sfxEnabled;
+
+  if (bgmRange) bgmRange.value = volumeToPercent(bgmVolume);
+  if (sfxRange) sfxRange.value = volumeToPercent(sfxVolume);
+
+  if (bgmValue) bgmValue.textContent = volumeToPercent(bgmVolume) + '%';
+  if (sfxValue) sfxValue.textContent = volumeToPercent(sfxVolume) + '%';
+}
+
+// เผื่อมีจุดอื่นในโค้ดยังเรียกชื่อเดิม
+function toggleBgm() {
+  setBgmEnabled(!bgmEnabled);
 }
 
 function updateBgmButton() {
-  const btn = $('bgmToggleBtn');
-  if (!btn) return;
-
-  btn.textContent = bgmEnabled ? '🎵' : '🔇';
-  btn.classList.toggle('off', !bgmEnabled);
-  btn.setAttribute('aria-label', bgmEnabled ? 'ปิดเพลงพื้นหลัง' : 'เปิดเพลงพื้นหลัง');
+  syncSettingsUI();
 }
 
 function enterLevelScreen() {
