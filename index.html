@@ -2158,6 +2158,12 @@ let gameLoadingAutoTimer = null;
 let bgmEnabled = localStorage.getItem(BGM_SETTING_KEY) !== 'off';
 let sfxEnabled = localStorage.getItem(SFX_SETTING_KEY) !== 'off';
 
+let audioCtx = null;
+let bgmSourceNode = null;
+let bgmGainNode = null;
+let clickSfxBuffer = null;
+let clickSfxLoading = null;
+
 let bgmVolume = getStoredVolume(
   BGM_VOLUME_KEY,
   isIOSDevice() ? BGM_IOS_VOLUME_DEFAULT : BGM_DESKTOP_VOLUME_DEFAULT
@@ -2280,6 +2286,59 @@ function showScreen(id) {
   document.body.dataset.screen = id;
 }
 
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return null;
+    audioCtx = new AudioContextClass();
+  }
+
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume().catch(err => {
+      console.warn('AudioContext resume failed:', err);
+    });
+  }
+
+  return audioCtx;
+}
+
+function setupBgmWebAudio() {
+  const bgm = $('bgmAudio');
+  const ctx = getAudioContext();
+
+  if (!bgm || !ctx) return;
+
+  try {
+    if (!bgmSourceNode) {
+      bgmSourceNode = ctx.createMediaElementSource(bgm);
+      bgmGainNode = ctx.createGain();
+
+      bgmSourceNode.connect(bgmGainNode);
+      bgmGainNode.connect(ctx.destination);
+    }
+
+    applyBgmVolumeToPlayer(bgmVolume);
+  } catch (err) {
+    console.warn('setupBgmWebAudio failed:', err);
+  }
+}
+
+function applyBgmVolumeToPlayer(value) {
+  const bgm = $('bgmAudio');
+  const volume = clampVolume(value);
+
+  if (bgm) {
+    bgm._normalVolume = volume;
+
+    // fallback สำหรับ browser ที่ยังใช้ได้
+    bgm.volume = volume;
+  }
+
+  if (bgmGainNode && audioCtx) {
+    bgmGainNode.gain.setTargetAtTime(volume, audioCtx.currentTime, 0.02);
+  }
+}
+
 function startBgm() {
   const bgm = $('bgmAudio');
   if (!bgm || !bgmEnabled) return;
@@ -2287,8 +2346,9 @@ function startBgm() {
   setupBgmSourceByDevice();
 
   bgm.loop = true;
-  bgm._normalVolume = bgmVolume;
-  bgm.volume = bgmVolume;
+
+  setupBgmWebAudio();
+  applyBgmVolumeToPlayer(bgmVolume);
 
   bgm.play().catch(err => {
     console.warn('BGM play blocked or failed:', err);
@@ -2309,18 +2369,60 @@ function setupClickSfx() {
   }, true);
 }
 
+function loadClickSfxBuffer() {
+  if (clickSfxBuffer) return Promise.resolve(clickSfxBuffer);
+  if (clickSfxLoading) return clickSfxLoading;
+
+  const ctx = getAudioContext();
+  if (!ctx) return Promise.resolve(null);
+
+  const base = $('clickSfxAudio');
+  const src = base ? (base.currentSrc || base.src) : 'assets/CLICK3.WAV';
+
+  clickSfxLoading = fetch(src)
+    .then(res => res.arrayBuffer())
+    .then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
+    .then(buffer => {
+      clickSfxBuffer = buffer;
+      return buffer;
+    })
+    .catch(err => {
+      console.warn('load click sfx buffer failed:', err);
+      return null;
+    });
+
+  return clickSfxLoading;
+}
+
+function playClickSfxBuffer(buffer) {
+  const ctx = getAudioContext();
+  if (!ctx || !buffer || !sfxEnabled) return;
+
+  const source = ctx.createBufferSource();
+  const gain = ctx.createGain();
+
+  source.buffer = buffer;
+  gain.gain.value = sfxVolume;
+
+  source.connect(gain);
+  gain.connect(ctx.destination);
+
+  source.start(0);
+}
+
 function playClickSfx() {
   if (!sfxEnabled) return;
 
-  const base = $('clickSfxAudio');
-  if (!base) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
 
-  const sound = new Audio(base.currentSrc || base.src);
-  sound.volume = sfxVolume;
-  sound.currentTime = 0;
+  if (clickSfxBuffer) {
+    playClickSfxBuffer(clickSfxBuffer);
+    return;
+  }
 
-  sound.play().catch(err => {
-    console.warn('click sound failed:', err);
+  loadClickSfxBuffer().then(buffer => {
+    playClickSfxBuffer(buffer);
   });
 }
 
@@ -2434,13 +2536,12 @@ function duckBgmTemporarily(duration = 1400) {
 
   const duckVolume = Math.max(BGM_DUCK_MIN, normalVolume * BGM_DUCK_RATIO);
 
-  bgm._normalVolume = normalVolume;
-  bgm.volume = Math.min(normalVolume, duckVolume);
+  applyBgmVolumeToPlayer(Math.min(normalVolume, duckVolume));
 
   clearTimeout(bgm._duckTimer);
   bgm._duckTimer = setTimeout(() => {
     if (bgm && !bgm.paused) {
-      bgm.volume = bgm._normalVolume || bgmVolume;
+      applyBgmVolumeToPlayer(normalVolume);
     }
   }, duration);
 }
@@ -2492,11 +2593,8 @@ function setBgmVolume(value) {
   bgmVolume = clampVolume(value);
   localStorage.setItem(BGM_VOLUME_KEY, String(bgmVolume));
 
-  const bgm = $('bgmAudio');
-  if (bgm) {
-    bgm._normalVolume = bgmVolume;
-    bgm.volume = bgmVolume;
-  }
+  setupBgmWebAudio();
+  applyBgmVolumeToPlayer(bgmVolume);
 
   syncSettingsUI();
 }
