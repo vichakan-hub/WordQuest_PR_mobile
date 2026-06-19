@@ -2129,7 +2129,7 @@ const SFX_SETTING_KEY = 'WORD_QUEST_SFX_ON';
 const BGM_VOLUME_KEY = 'WORD_QUEST_BGM_VOLUME';
 const SFX_VOLUME_KEY = 'WORD_QUEST_SFX_VOLUME';
 
-const BGM_DESKTOP_VOLUME_DEFAULT = 0.05;
+const BGM_DESKTOP_VOLUME_DEFAULT = 0.1;
 const BGM_IOS_VOLUME_DEFAULT = 1;
 const SFX_VOLUME_DEFAULT = 0.45;
 const BGM_DUCK_RATIO = 0.35;
@@ -3495,6 +3495,72 @@ async function preloadCurrentAudio() {
   return preloadAudioByFileId(q.audioFileId);
 }
 
+function setBgmLiveVolume(value) {
+  const volume = clampVolume(value);
+  const bgm = $('bgmAudio');
+
+  // fallback สำหรับ desktop
+  if (bgm) {
+    bgm.volume = volume;
+  }
+
+  // สำหรับ iPhone / Web Audio
+  if (
+    typeof bgmGainNode !== 'undefined' &&
+    bgmGainNode &&
+    typeof audioCtx !== 'undefined' &&
+    audioCtx
+  ) {
+    bgmGainNode.gain.setTargetAtTime(volume, audioCtx.currentTime, 0.03);
+  }
+}
+
+function duckBgmWhileAudioPlays(audio) {
+  const bgm = $('bgmAudio');
+
+  if (!audio || !bgm || bgm.paused) {
+    return function restoreNothing() {};
+  }
+
+  const normalVolume = bgmVolume;
+  const duckVolume = Math.max(BGM_DUCK_MIN, normalVolume * BGM_DUCK_RATIO);
+
+  let restored = false;
+
+  clearTimeout(bgm._promptDuckTimer);
+
+  // ลดเสียง BGM ทันที
+  setBgmLiveVolume(duckVolume);
+
+  function restoreBgm() {
+    if (restored) return;
+    restored = true;
+
+    clearTimeout(bgm._promptDuckTimer);
+
+    audio.removeEventListener('ended', restoreBgm);
+    audio.removeEventListener('pause', restoreBgm);
+    audio.removeEventListener('error', restoreBgm);
+
+    // คืนเสียง BGM กลับมาตามแถบเลื่อนล่าสุด
+    setBgmLiveVolume(bgmVolume);
+  }
+
+  // คืนเสียงเมื่อไฟล์เล่นจบจริง
+  audio.addEventListener('ended', restoreBgm, { once: true });
+
+  // คืนเสียงกรณีกดออก / เปลี่ยนข้อ / หยุดเสียง
+  audio.addEventListener('pause', restoreBgm, { once: true });
+
+  // คืนเสียงกรณีไฟล์เสียง error
+  audio.addEventListener('error', restoreBgm, { once: true });
+
+  // กันพลาด เผื่อบาง browser ไม่ยิง ended
+  bgm._promptDuckTimer = setTimeout(restoreBgm, 60000);
+
+  return restoreBgm;
+}
+
 async function playPromptSound() {
   const q = questions[currentIndex];
   if (!q) return;
@@ -3520,17 +3586,27 @@ async function playPromptSound() {
       return;
     }
 
-    try {
-      currentAudio = new Audio(dataUrl);
-      currentAudio.volume = 1;
-      currentAudio.currentTime = 0;
-      await currentAudio.play();
-      return;
-    } catch (err) {
-      console.warn('audio play failed', err);
-      speakThai(q.prompt || q.answer || '');
-      return;
-    }
+let restoreBgm = function restoreNothing() {};
+
+try {
+  currentAudio = new Audio(dataUrl);
+  currentAudio.volume = 1;
+  currentAudio.currentTime = 0;
+
+  // ลดเสียง BGM ตอนเสียงคำถามเริ่มเล่น
+  restoreBgm = duckBgmWhileAudioPlays(currentAudio);
+
+  await currentAudio.play();
+  return;
+} catch (err) {
+  console.warn('audio play failed', err);
+
+  // ถ้าเล่นเสียงไม่ได้ ให้คืน BGM ทันที
+  restoreBgm();
+
+  speakThai(q.prompt || q.answer || '');
+  return;
+}
   }
 
   speakThai(q.prompt || q.answer || '');
