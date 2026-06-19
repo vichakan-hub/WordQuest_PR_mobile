@@ -1917,12 +1917,35 @@ const $ = (id) => document.getElementById(id);
 
 window.addEventListener('DOMContentLoaded', init);
 
+const BGM_DESKTOP_FILE = 'assets/bgm.mp3';
+const BGM_IOS_FILE = 'assets/bgm-ios.mp3';
+
+function isIOSDevice() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+function setupBgmSourceByDevice() {
+  const bgm = $('bgmAudio');
+  if (!bgm) return;
+
+  const targetSrc = isIOSDevice() ? BGM_IOS_FILE : BGM_DESKTOP_FILE;
+  const currentSrc = bgm.getAttribute('src');
+
+  if (currentSrc !== targetSrc) {
+    bgm.pause();
+    bgm.setAttribute('src', targetSrc);
+    bgm.load();
+  }
+}
+
 function init() {
   document.body.dataset.screen = 'startScreen';
   setupLogoFallbacks();
   getDeviceId();
   bindEvents();
   setupClickSfx();
+  setupBgmSourceByDevice();
   updateBgmButton();
   setHomeLoading(8, '', 'loading');
   loadLevels();
@@ -1971,9 +1994,13 @@ function startBgm() {
   const bgm = $('bgmAudio');
   if (!bgm || !bgmEnabled) return;
 
-  bgm._normalVolume = BGM_VOLUME;
-  bgm.volume = BGM_VOLUME;
+  setupBgmSourceByDevice();
+
   bgm.loop = true;
+
+  // Desktop ใช้ volume ได้ปกติ
+  // iPhone ใช้ไฟล์ bgm-ios.mp3 ที่ลดเสียงมาแล้ว
+  bgm.volume = isIOSDevice() ? 1 : 0.10;
 
   bgm.play().catch(err => {
     console.warn('BGM play blocked or failed:', err);
