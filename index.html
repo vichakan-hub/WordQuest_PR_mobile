@@ -1954,6 +1954,92 @@ body[data-screen="levelScreen"] .app-credit {
   }
 }
 
+@media (max-width: 960px) and (max-height: 500px) {
+  :root {
+    --level-logo-width: min(36vw, 170px);
+    --level-logo-max-height: 60px;
+    --game-action-button-height: 64px;
+    --answer-zone-height: 64px;
+    --game-action-margin: 0px auto 10px;
+    --letter-card-height: 50px;
+    --letter-card-font: 1.25rem;
+  }
+
+  body[data-screen="levelScreen"] .app-credit {
+    --credit-bottom: calc(var(--safe-bottom) - 6px);
+  }
+
+  .settings-overlay {
+    padding: 10px;
+  }
+
+  .settings-card {
+    width: min(360px, 86vw);
+    padding: 14px 16px;
+    border-radius: 22px;
+  }
+
+  .settings-head {
+    margin-bottom: 10px;
+  }
+
+  .settings-head h2 {
+    font-size: 1.05rem;
+  }
+
+  .settings-close-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+    font-size: .9rem;
+  }
+
+  .settings-list {
+    gap: 10px;
+  }
+
+  .setting-row {
+    padding: 10px 12px;
+    border-radius: 16px;
+  }
+
+  .setting-name {
+    font-size: .82rem;
+  }
+
+  .setting-desc {
+    font-size: .62rem;
+    margin-top: 2px;
+  }
+
+  .setting-switch {
+    width: 48px;
+    height: 28px;
+  }
+
+  .setting-switch span::before {
+    width: 22px;
+    height: 22px;
+  }
+
+  .setting-switch input:checked + span::before {
+    transform: translateX(20px);
+  }
+
+  .setting-volume {
+    padding: 0 4px;
+  }
+
+  .setting-volume label {
+    margin-bottom: 2px;
+    font-size: .74rem;
+  }
+
+  .setting-volume input[type="range"] {
+    height: 24px;
+  }
+}
+
 
 
 @media (max-width: 920px) and (orientation: portrait) {
