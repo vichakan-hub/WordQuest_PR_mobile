@@ -3741,13 +3741,13 @@ function gasJsonp(api, params = {}) {
 
 
 // Register service worker for mobile/PWA repo
-if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(err => {
-      console.warn('Service worker register failed:', err);
-    });
-  });
-}
+//if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+//  window.addEventListener('load', () => {
+//    navigator.serviceWorker.register('./sw.js').catch(err => {
+//      console.warn('Service worker register failed:', err);
+//    });
+//  });
+//}
 
   </script>
 </body>
