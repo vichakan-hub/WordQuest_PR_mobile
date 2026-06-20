@@ -1954,175 +1954,177 @@ body[data-screen="levelScreen"] .app-credit {
   }
 }
 
-@media (max-width: 960px) and (max-height: 360px) {
 
+@media (max-width: 960px) and (orientation: portrait) {
+  .rotate-overlay {
+    display: none;
+  }
 
-    :root {
+  :root {
     --scene-bg: var(--mobile-bg), var(--desktop-bg);
     --vh: 100dvh;
 
-    --home-logo-width: min(82vw, 330px);
-    --home-logo-max-height: 180px;
-    --home-main-button-width: min(78vw, 300px);
-    --home-main-button-height: 66px;
-
-    --level-screen-gap: 7px;
+    /* Level portrait */
+    --level-screen-gap: 8px;
     --level-screen-pad-top: calc(var(--safe-top) + 8px);
     --level-screen-pad-x: 10px;
-    --level-screen-pad-bottom: calc(var(--safe-bottom) + 34px);
- --level-logo-width: min(36vw, 170px);
- --level-logo-max-height: 60px;
-    --level-panel-width: min(94vw, 430px);
-    --level-panel-padding: 12px 10px 10px;
-    --level-panel-radius: 23px;
-    --level-title-size: 1.34rem;
-    --level-subtitle-size: .66rem;
-    --level-node-size: 52px;
-    --level-node-radius: 12px;
-    --level-map-gap-x: 7px;
-    --level-map-gap-y: 10px;
-    --level-map-pad-x: 32px;
-    --level-wrap-gap: 7px;
-    --level-pager-height: 180px;
-    --level-arrow-top: 88px;
-    --level-name-size: .50rem;
-    --level-name-height: 25px;
-    --level-star-size: .72rem;
-    --level-star-width: 44px;
-    --level-lock-size: .98rem;
+    --level-screen-pad-bottom: calc(var(--safe-bottom) + 44px);
 
-    --game-shell-width: min(820px, 75vw);
-    --game-screen-padding: calc(var(--safe-top) + 10px) 10px calc(var(--safe-bottom) + 8px);
-    --game-screen-gap: 6px;
-    --game-topbar-padding: 6px 8px;
-    --game-topbar-radius: 18px;
-    --game-topbar-columns: 1fr auto;
-    --game-logo-display: none;
-    --hud-gap: 5px;
-    --hud-pill-height: 50px;
-    --hud-label-size: .82rem;
-    --hud-value-size: 1.10rem;
+    --level-logo-width: min(58vw, 220px);
+    --level-logo-max-height: 100px;
+
+    --level-panel-width: min(92vw, 430px);
+    --level-panel-padding: 14px 12px 16px;
+    --level-panel-radius: 24px;
+
+    --level-title-size: 1.45rem;
+    --level-subtitle-size: .72rem;
+
+    --level-node-size: 58px;
+    --level-node-radius: 13px;
+    --level-map-gap-x: 18px;
+    --level-map-gap-y: 8px;
+    --level-map-pad-x: 0px;
+    --level-wrap-gap: 5px;
+    --level-pager-height: 440px;
+    --level-name-size: .56rem;
+    --level-name-height: 24px;
+    --level-star-size: .78rem;
+    --level-star-width: 50px;
+    --level-lock-size: 1.05rem;
+
+    /* Game portrait */
+    --game-shell-width: min(430px, 92vw);
+    --game-screen-padding: calc(var(--safe-top) + 8px) 10px calc(var(--safe-bottom) + 10px);
+    --game-screen-gap: 8px;
+
+    --game-topbar-padding: 8px;
+    --game-topbar-radius: 20px;
+    --game-topbar-columns: 1fr;
+    --hud-gap: 6px;
+    --hud-pill-height: 44px;
+    --hud-label-size: .68rem;
+    --hud-value-size: .95rem;
     --back-btn-height: 38px;
-    --back-btn-font: .68rem;
+    --back-btn-font: .78rem;
 
-    --game-panel-padding: 15px 15px 20px;
-    --game-panel-radius: 23px;
-    --mission-title-size: 1.10rem;
+    --game-panel-padding: 14px 12px 16px;
+    --game-panel-radius: 24px;
+    --mission-title-size: 1.35rem;
     --mission-subtitle-display: block;
-    --mission-subtitle-size: .58rem;
+    --mission-subtitle-size: .74rem;
+
     --game-action-width: 100%;
-    --game-action-margin: 0px auto 10px;
-    --game-action-padding: 0 auto;
-    --game-action-gap: 12px;
-    --game-action-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1fr);
-    --game-action-button-height: 64px;
-    --game-action-button-font: 1.30rem;
-    --game-action-button-radius: 18px;
+    --game-action-margin: 8px auto 10px;
+    --game-action-padding: 0;
+    --game-action-gap: 8px;
+    --game-action-columns: 1fr;
+
+    --game-action-button-height: 54px;
+    --game-action-button-font: 1.05rem;
+    --game-action-button-radius: 17px;
     --game-action-button-max-width: none;
-    --answer-zone-height: 64px;
+
+    --answer-zone-height: 76px;
     --answer-zone-max-width: none;
-    --answer-zone-radius: 19px;
-    --answer-zone-font: 2.10rem;
-    --answer-placeholder-font: 1.10rem;
+    --answer-zone-radius: 18px;
+    --answer-zone-font: 1.8rem;
+    --answer-placeholder-font: .86rem;
 
     --letter-grid-width: 100%;
-    --letter-grid-gap: 12px;
-    --letter-card-height: 50px;
-    --letter-card-radius: 15px;
-    --letter-card-font: 1.25rem;
+    --letter-grid-gap: 8px;
+    --letter-card-height: 58px;
+    --letter-card-radius: 16px;
+    --letter-card-font: 1.8rem;
     --letter-card-depth: 5px;
 
-    --bgm-size: 42px;
-    --bgm-radius: 15px;
-    --bgm-top: calc(var(--safe-top) + 10px);
-    --bgm-right: calc(var(--safe-right) + 2px);
-    --bgm-font: 1rem;
-
-    --credit-bottom: calc(var(--safe-bottom) + 4px);
-    --credit-font: .54rem;
+    --credit-bottom: calc(var(--safe-bottom) + 8px);
+    --credit-font: .52rem;
     --credit-padding: 4px 9px;
   }
 
-  body[data-screen="levelScreen"] .app-credit {
-    --credit-bottom: calc(var(--safe-bottom) - 6px);
+  /* หน้าเลือกด่าน: 2 คอลัมน์ 5 แถว */
+  .level-pager {
+    width: 100%;
+    height: var(--level-pager-height);
+    padding: 38px 0 42px;
   }
 
-  .settings-overlay {
-    padding: 10px;
+  .level-map-viewport {
+    height: 100%;
   }
 
-  .settings-card {
-    width: min(360px, 86vw);
-    padding: 14px 16px;
-    border-radius: 22px;
+  .level-map {
+    width: 100%;
+    max-width: none;
+    margin: 0 auto;
+    padding-left: 0;
+    padding-right: 0;
+    grid-template-columns: repeat(2, var(--level-node-size));
+    justify-content: center;
+    align-content: start;
   }
 
-  .settings-head {
-    margin-bottom: 10px;
-  }
-
-  .settings-head h2 {
-    font-size: 1.05rem;
-  }
-
-  .settings-close-btn {
-    width: 34px;
+  .level-page-btn {
+    left: 50%;
+    right: auto;
+    width: 58px;
     height: 34px;
-    border-radius: 11px;
-    font-size: .9rem;
+    font-size: 2rem;
+    transform: translateX(-50%);
   }
 
-  .settings-list {
-    gap: 10px;
+  .level-page-btn:hover:not(:disabled) {
+    transform: translateX(-50%) scale(1.08);
   }
 
-  .setting-row {
-    padding: 10px 12px;
-    border-radius: 16px;
+  .level-page-btn:active:not(:disabled) {
+    transform: translateX(-50%) scale(.98);
   }
 
-  .setting-name {
-    font-size: .82rem;
+  .level-page-prev {
+    top: 0;
+    bottom: auto;
   }
 
-  .setting-desc {
-    font-size: .62rem;
-    margin-top: 2px;
+  .level-page-next {
+    top: auto;
+    bottom: 0;
   }
 
-  .setting-switch {
-    width: 48px;
-    height: 28px;
+  /* หน้าเกม */
+  .game-topbar {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 
-  .setting-switch span::before {
-    width: 22px;
-    height: 22px;
+  .hud-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .setting-switch input:checked + span::before {
-    transform: translateX(20px);
+  .small-btn {
+    width: 100%;
   }
 
-  .setting-volume {
-    padding: 0 4px;
+  .game-panel {
+    gap: 8px;
   }
 
-  .setting-volume label {
-    margin-bottom: 2px;
-    font-size: .74rem;
+  .game-action-row {
+    grid-template-columns: 1fr;
   }
 
-  .setting-volume input[type="range"] {
-    height: 24px;
+  .sound-button,
+  .submit-answer-btn {
+    max-width: none;
   }
-}
 
+  .letter-grid {
+    grid-template-columns: 1fr;
+  }
 
-
-@media (max-width: 920px) and (orientation: portrait) {
-  .rotate-overlay {
-    display: flex;
+  .app-credit {
+    white-space: nowrap;
   }
 }
 </style>
