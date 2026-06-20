@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wordquest-mobile-v1';
+const CACHE_NAME = 'wordquest-mobile-v3';
 
 const APP_SHELL = [
   './',
