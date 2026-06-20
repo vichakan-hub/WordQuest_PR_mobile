@@ -2043,54 +2043,53 @@ body[data-screen="levelScreen"] .app-credit {
     --credit-padding: 4px 9px;
   }
 
-  /* หน้าเลือกด่าน: 2 คอลัมน์ 5 แถว */
-  .level-pager {
-    width: 100%;
-    height: var(--level-pager-height);
-    padding: 38px 0 42px;
-  }
+ /* หน้าเลือกด่านแนวตั้ง: 2 คอลัมน์ 5 แถว แต่ปุ่มเลื่อนยังอยู่ซ้าย-ขวา */
+.level-pager {
+  width: 100%;
+  height: var(--level-pager-height);
+  padding: 0 42px;
+}
 
-  .level-map-viewport {
-    height: 100%;
-  }
+.level-map-viewport {
+  height: 100%;
+}
 
-  .level-map {
-    width: 100%;
-    max-width: none;
-    margin: 0 auto;
-    padding-left: 0;
-    padding-right: 0;
-    grid-template-columns: repeat(2, var(--level-node-size));
-    justify-content: center;
-    align-content: start;
-  }
+.level-map {
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  padding-left: 0;
+  padding-right: 0;
+  grid-template-columns: repeat(2, var(--level-node-size));
+  justify-content: center;
+  align-content: center;
+}
 
-  .level-page-btn {
-    left: 50%;
-    right: auto;
-    width: 58px;
-    height: 34px;
-    font-size: 2rem;
-    transform: translateX(-50%);
-  }
+.level-page-btn {
+  top: 50%;
+  width: 34px;
+  height: 64px;
+  font-size: 2.7rem;
+  transform: translateY(-50%) scaleX(1.06);
+}
 
-  .level-page-btn:hover:not(:disabled) {
-    transform: translateX(-50%) scale(1.08);
-  }
+.level-page-btn:hover:not(:disabled) {
+  transform: translateY(-50%) scaleX(1.12) scaleY(1.04);
+}
 
-  .level-page-btn:active:not(:disabled) {
-    transform: translateX(-50%) scale(.98);
-  }
+.level-page-btn:active:not(:disabled) {
+  transform: translateY(-50%) scaleX(1.02) scaleY(.98);
+}
 
-  .level-page-prev {
-    top: 0;
-    bottom: auto;
-  }
+.level-page-prev {
+  left: 2px;
+  right: auto;
+}
 
-  .level-page-next {
-    top: auto;
-    bottom: 0;
-  }
+.level-page-next {
+  right: 2px;
+  left: auto;
+}
 
   /* หน้าเกม */
   .game-topbar {
