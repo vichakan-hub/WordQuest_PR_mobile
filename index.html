@@ -1883,6 +1883,21 @@ body[data-screen="levelScreen"] .app-credit {
 }
 }
 
+@media (max-width: 950px) and (max-height: 430px) {
+  :root {
+    --level-logo-width: min(42vw, 190px);
+    --level-logo-max-height: 78px;
+    --game-action-button-height: 84px;
+    --answer-zone-height: 84px;
+    --game-action-margin: 0px auto 10px;
+    --letter-card-height: 60px;
+    --letter-card-font: 1.55rem;
+  }
+  body[data-screen="levelScreen"] .app-credit {
+  --credit-bottom: calc(var(--safe-bottom) - 6px);
+}
+}
+
 @media (max-width: 900px) and (orientation: portrait) {
   .rotate-overlay {
     display: flex;
