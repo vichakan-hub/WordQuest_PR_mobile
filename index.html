@@ -2749,6 +2749,15 @@ let correctVoicePlayer = null;
 let wrongVoicePlayer = null;
 let levelCompleteVoicePlayer = null;    
 
+function stopFeedbackVoices() {
+  [correctVoicePlayer, wrongVoicePlayer, levelCompleteVoicePlayer].forEach(player => {
+    if (player) {
+      player.pause();
+      player.currentTime = 0;
+    }
+  });
+}
+
 
 function playCorrectVoice() {
   const voice = $('correctVoiceAudio');
@@ -3020,6 +3029,7 @@ function enterLevelScreen() {
 
 function backToLevels() {
   stopAudio();
+  stopFeedbackVoices();
 
   syncLevelPageToCurrentProgress();
   showScreen('levelScreen');
@@ -4010,9 +4020,9 @@ async function finishLevel() {
 
   showScreen('resultScreen');
 
-  setTimeout(() => {
-    playLevelCompleteVoice();
-  }, 250);
+  stopAudio();
+  stopFeedbackVoices();
+  playLevelCompleteVoice();
 
   try {
     await apiSaveResult({ device_id: getDeviceId(), level_id: currentLevel.id, score, total, stars, details });
@@ -4051,6 +4061,9 @@ function saveLevelProgress(level, stars) {
 }
 
 function restartCurrentLevel() {
+  stopAudio();
+  stopFeedbackVoices();
+
   if (currentLevel) startLevel(currentLevel);
   else backToLevels();
 }
