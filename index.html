@@ -2344,6 +2344,7 @@ body[data-screen="levelScreen"] .app-credit {
 <audio id="clickSfxAudio" src="assets/CLICK3.WAV" preload="auto"></audio>
 <audio id="correctVoiceAudio" src="assets/kengmakka.mp3?v=1" preload="auto"></audio>
 <audio id="wrongVoiceAudio" src="assets/longeekkang.mp3?v=1" preload="auto"></audio>
+<audio id="levelCompleteVoiceAudio" src="assets/passlevel.mp3?v=1" preload="auto"></audio>
 <button class="settings-toggle" type="button" id="settingsBtn" aria-label="ตั้งค่าเสียง">⚙️</button>
 
 <div class="settings-overlay" id="settingsOverlay" aria-hidden="true">
@@ -2746,6 +2747,7 @@ function playClickSfx() {
 
 let correctVoicePlayer = null;
 let wrongVoicePlayer = null;
+let levelCompleteVoicePlayer = null;    
 
 
 function playCorrectVoice() {
@@ -2841,6 +2843,53 @@ function playCorrectVoice() {
   } catch (err) {
     console.warn('wrong voice failed:', err);
     speakThai('ลองใหม่นะ');
+  }
+}
+
+function playLevelCompleteVoice() {
+  const voice = $('levelCompleteVoiceAudio');
+
+  duckBgmTemporarily(2600);
+
+  if (!voice) {
+    speakThai('ผ่านด่านแล้ว ยอดเยี่ยมมากค่ะ');
+    return;
+  }
+
+  const src = voice.currentSrc || voice.getAttribute('src') || voice.src;
+
+  if (!src) {
+    speakThai('ผ่านด่านแล้ว ยอดเยี่ยมมากค่ะ');
+    return;
+  }
+
+  try {
+    if (levelCompleteVoicePlayer) {
+      levelCompleteVoicePlayer.pause();
+      levelCompleteVoicePlayer.currentTime = 0;
+    }
+
+    levelCompleteVoicePlayer = new Audio(src);
+    levelCompleteVoicePlayer.volume = 1;
+    levelCompleteVoicePlayer.preload = 'auto';
+
+    levelCompleteVoicePlayer.addEventListener('error', () => {
+      console.warn('level complete voice file error:', src);
+      toast('ไม่พบไฟล์เสียงผ่านด่าน ตรวจชื่อไฟล์ใน assets');
+      speakThai('ผ่านด่านแล้ว ยอดเยี่ยมมากค่ะ');
+    }, { once: true });
+
+    const playPromise = levelCompleteVoicePlayer.play();
+
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(err => {
+        console.warn('level complete voice failed:', err);
+        speakThai('ผ่านด่านแล้ว ยอดเยี่ยมมากค่ะ');
+      });
+    }
+  } catch (err) {
+    console.warn('level complete voice failed:', err);
+    speakThai('ผ่านด่านแล้ว ยอดเยี่ยมมากค่ะ');
   }
 }
 
@@ -3958,7 +4007,12 @@ async function finishLevel() {
   $('resultStars').innerHTML = renderStars(stars);
   $('resultScore').textContent = `${score} / ${total}`;
   $('resultMessage').textContent = makeResultMessage(stars);
+
   showScreen('resultScreen');
+
+  setTimeout(() => {
+    playLevelCompleteVoice();
+  }, 250);
 
   try {
     await apiSaveResult({ device_id: getDeviceId(), level_id: currentLevel.id, score, total, stars, details });
