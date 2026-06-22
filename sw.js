@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wordquest-mobile-v1';
+const CACHE_NAME = 'wordquest-mobile-v2';
 
 const APP_SHELL = [
   './',
@@ -11,6 +11,7 @@ const APP_SHELL = [
   './assets/CLICK3.WAV',
   './assets/kengmakka.mp3',
   './assets/longeekkang.mp3'
+  './assets/passlevel.mp3'
 ];
 
 self.addEventListener('install', event => {
