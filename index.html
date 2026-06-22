@@ -2858,46 +2858,35 @@ function playCorrectVoice() {
 function playLevelCompleteVoice() {
   const voice = $('levelCompleteVoiceAudio');
 
-  duckBgmTemporarily(2600);
+  duckBgmTemporarily(3200);
 
   if (!voice) {
     speakThai('ผ่านด่านแล้ว ยอดเยี่ยมมากค่ะ');
     return;
   }
 
-  const src = voice.currentSrc || voice.getAttribute('src') || voice.src;
-
-  if (!src) {
-    speakThai('ผ่านด่านแล้ว ยอดเยี่ยมมากค่ะ');
-    return;
-  }
-
   try {
-    if (levelCompleteVoicePlayer) {
-      levelCompleteVoicePlayer.pause();
-      levelCompleteVoicePlayer.currentTime = 0;
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
     }
 
-    levelCompleteVoicePlayer = new Audio(src);
-    levelCompleteVoicePlayer.volume = 1;
-    levelCompleteVoicePlayer.preload = 'auto';
+    voice.pause();
+    voice.currentTime = 0;
+    voice.volume = 1;
+    voice.muted = false;
 
-    levelCompleteVoicePlayer.addEventListener('error', () => {
-      console.warn('level complete voice file error:', src);
-      toast('ไม่พบไฟล์เสียงผ่านด่าน ตรวจชื่อไฟล์ใน assets');
-      speakThai('ผ่านด่านแล้ว ยอดเยี่ยมมากค่ะ');
-    }, { once: true });
-
-    const playPromise = levelCompleteVoicePlayer.play();
+    const playPromise = voice.play();
 
     if (playPromise && typeof playPromise.catch === 'function') {
       playPromise.catch(err => {
         console.warn('level complete voice failed:', err);
+        toast('เสียงผ่านด่านยังเล่นไม่ได้ ตรวจไฟล์ passlevel.mp3');
         speakThai('ผ่านด่านแล้ว ยอดเยี่ยมมากค่ะ');
       });
     }
   } catch (err) {
     console.warn('level complete voice failed:', err);
+    toast('เสียงผ่านด่านมีปัญหา');
     speakThai('ผ่านด่านแล้ว ยอดเยี่ยมมากค่ะ');
   }
 }
